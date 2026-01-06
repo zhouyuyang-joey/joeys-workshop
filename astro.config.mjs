@@ -20,4 +20,21 @@ export default defineConfig({
     }),
     tailwind(),
   ],
+  vite: {
+    ssr: {
+      noExternal: [
+        '@strudel/tonal',
+        '@strudel/core',
+        '@strudel/webaudio',
+        '@strudel/soundfonts',
+        '@strudel/codemirror',
+        '@strudel/draw',
+        '@strudel/mini',
+        '@strudel/transpiler'
+      ],
+    },
+    optimizeDeps: {
+      include: ['@strudel/tonal', '@strudel/core']
+    }
+  },
 });
