@@ -1,0 +1,61 @@
+---
+title: Patterns and Rhythm
+layout: ../../layouts/BlogLayout.astro
+---
+
+import { MiniRepl } from '../../docs/MiniRepl';
+import Box from '../../components/Box.astro';
+
+# Patterns and Rhythm
+
+Learn how to create patterns and rhythms with Strudel.
+
+## Basic Patterns
+
+Let's start with a simple pattern:
+
+<MiniRepl client:visible tune={`sound("bd").rarely(rev)`} />
+
+<Box>
+
+This example introduces some new concepts. Try experimenting with different sounds and effects!
+
+</Box>
+
+## Repeating Sounds
+
+Create patterns by repeating sounds:
+
+<MiniRepl client:visible tune={`sound("bd hh sd hh")`} />
+
+<Box>
+
+Each sound in the sequence will play in turn. This creates a basic drum pattern.
+
+</Box>
+
+## Adding Variations
+
+Make your patterns more interesting:
+
+<MiniRepl client:visible tune={`sound("bd sd bd sd")`} />
+
+<Box>
+
+Try changing the order of sounds or replacing them with different drum components to create new rhythmic patterns.
+
+</Box>
+
+## Combining with Effects
+
+Add effects to make things more interesting:
+
+<MiniRepl client:visible tune={`sound("bd").room(0.5)`} />
+
+<Box>
+
+Effects like `room`, `delay`, and `gain` can transform your sounds in creative ways.
+
+</Box>
+
+Keep exploring and have fun creating rhythms!

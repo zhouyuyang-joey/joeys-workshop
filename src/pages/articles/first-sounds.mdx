@@ -1,0 +1,135 @@
+---
+title: 用算法创造律动
+layout: ../../layouts/BlogLayout.astro
+---
+
+import { MiniRepl } from '../../docs/MiniRepl';
+import Box from '../../components/Box.astro';
+import { Image } from 'astro:assets';
+import drumset from '../../img/drumset.png';
+
+
+嗨，欢迎来到Joey的strudel workshop！在这里，我们的目标是快速地让初学者们掌握strudel的基础以及创造律动的方法。
+这份worksheet改编自Lucy Cheesman与官方的workshop。
+
+# 关于worksheet
+我们可以在这个页面的worksheet中交互式地编写和运行代码，因此所有的代码块都是可以运行并且修改的。
+
+按下播放按钮或按 ctrl(option)+enter 可以播放声音。按下停止按钮或 ctrl(command)+. 来停止声音。(正常来说，mac用户按option+.也可以停止声音，但是在这个worksheet中由于某些技术原因无法使用。)
+
+更改代码以后需要按update按钮或者再次按 ctrl(option)+enter 来应用更新的代码。
+一些声音在第一次播放时会有卡顿，这是正常的情况请不要担心。
+
+在学习完知识后，你可以到 [strudel.cc](https://strudel.cc/) 来继续玩耍！
+
+# 基础知识
+
+以下是一个我们在 Strudel 中编写基本pattern的方法。
+- 其中sound是一个函数，告诉strudel我们想要播放声音
+- 在引号中，我们可以写下想要播放的声音。在这里，我们尝试播放一个乌鸦的叫声 🐦‍⬛
+
+<MiniRepl client:visible tune={`sound("crow")`} />
+
+恭喜！你已经用live coding的方式制造出了第一个动静。接下来让我试试看，如果在pattern里放入更多的声音会发生什么。
+
+<MiniRepl client:visible tune={`sound("bd hh sd hh bd hh sd crow")`} />
+<Box>
+如果以上这些声音的名称对你来说很陌生也没关系！这是一些鼓组的不同部分的缩写，可以通过以下这张图来认识一下鼓组中不同的组件。
+
+<Image src={drumset} alt="drum set" width={500} />
+
+<a class="text-right text-xs" href="https://de.wikipedia.org/wiki/Schlagzeug#/media/Datei:Drum_set.svg" target="_blank">
+  原图来自 Pbroks13
+</a>
+
+常见的鼓组缩写如下：
+- bd = bass drum
+- sd = snare drum
+- rim = rimshot
+- hh = hihat
+- oh = open hihat
+- lt = low tom
+- mt = middle tom
+- ht = high tom
+- rd = ride cymbal
+- cr = crash cymbal
+
+</Box>
+
+嗯...🤔 如果放入更多的声音的话呢？
+
+<MiniRepl client:visible tune={`sound("bd hh sd hh bd hh sd crow bd hh sd oh bd hh crow crow")`} />
+
+我们会发现pattern的运行变得更快、更密集了。这是因为 Strudel 在后台有一个固定时间的“循环”。pattern中的任何声音都将在一个周期内运行，strudel 也会尝试均匀地分布这些声音。
+
+因此“咚次哒次”的速度会...
+<MiniRepl client:visible tune={`sound("bd hh sd hh")`} />
+比“咚次哒次咚咚哒次”来得慢。
+<MiniRepl client:visible tune={`sound("bd hh sd hh bd bd sd hh")`} />
+
+另外，strudel中有许多的缩写，比如我们可以用s来代表sound。
+<MiniRepl client:visible tune={`s("mt rim lt oh")`} />
+
+现在，让我们来看看如何同时发出多个声音
+
+<MiniRepl
+  client:visible
+  tune={`$: s("bd sd rim bd")
+$: s("hh hh hh hh hh hh hh hh")`}
+/>
+
+接下来，请你尝试亲手写一些代码吧！
+<MiniRepl client:visible tune={``} />
+<Box>
+除了上面提到的鼓组的声音，你也可以尝试以下声音！
+
+**insect  wind  jazz  metal  east  crow  casio  space  numbers**
+（小提示：你可以通过双击来快速选中某个词语）
+</Box>
+
+# 基础语法
+
+Strudel有一套被称为mininotation的非常棒的语法，它可以帮你快速地构建丰富的pattern。
+比如我们可以用 * 来加快声音在序列中播放的速度。
+
+<MiniRepl client:visible tune={`sound("hh*4")`} />
+<MiniRepl client:visible tune={`sound("hh*8")`} />
+<MiniRepl client:visible tune={`sound("hh*16")`} />
+<Box>
+
+These are just a few of the available sounds. Each one contains multiple samples that you can access using a colon and number:
+
+```
+sound("casio:0")
+sound("casio:1")
+sound("casio:2")
+```
+
+Try mixing different sounds together!
+
+</Box>
+
+## Drum Sounds
+
+Strudel includes a rich collection of drum sounds. Here are the basics:
+
+<MiniRepl client:visible tune={`sound("bd hh sd oh")`} />
+
+<Box>
+
+The letters represent different drum kit components:
+
+- `bd` = bass drum
+- `sd` = snare drum
+- `hh` = hi-hat
+- `oh` = open hat
+- `rim` = rimshot
+- `tom` = tom
+
+Experiment with different combinations!
+
+</Box>
+
+## Next Steps
+
+Now that you understand how sounds work, try creating your own patterns. Mix sounds with rhythms to create interesting musical ideas.
