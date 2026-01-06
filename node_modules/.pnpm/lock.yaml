@@ -38,6 +38,9 @@ importers:
       '@strudel/soundfonts':
         specifier: ^1.2.6
         version: 1.2.6
+      '@strudel/tonal':
+        specifier: ^1.2.5
+        version: 1.2.5
       '@strudel/transpiler':
         specifier: '*'
         version: 1.2.5

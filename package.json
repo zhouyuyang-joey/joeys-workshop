@@ -21,6 +21,7 @@
     "@strudel/draw": "*",
     "@strudel/mini": "*",
     "@strudel/soundfonts": "^1.2.6",
+    "@strudel/tonal": "^1.2.5",
     "@strudel/transpiler": "*",
     "@strudel/webaudio": "*",
     "@tailwindcss/forms": "^0.5.10",
