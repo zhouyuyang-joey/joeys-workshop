@@ -114,3 +114,8 @@ h3 {
     padding: 1.5rem;
   }
 }
+
+code::before,
+code::after {
+  content: "" !important;
+}

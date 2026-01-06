@@ -1,0 +1,255 @@
+---
+title: 算法律动
+layout: ../../layouts/BlogLayout.astro
+---
+
+import { MiniRepl } from '../../docs/MiniRepl';
+import Box from '../../components/Box.astro';
+import { Image } from 'astro:assets';
+import drumset from '../../img/drumset.png';
+
+
+嗨，欢迎来到Joey的strudel workshop！在这里，我们的目标是快速地让初学者们掌握strudel的基础以及创造律动的方法。
+这份worksheet改编自Lucy Cheesman与官方的workshop。
+请记住live coding无定式，也没有所谓的“最佳实践”。构建同一个效果往往有数种不同的方法！
+
+# 关于worksheet
+我们可以在这个页面的worksheet中交互式地编写和运行代码，因此所有的代码块都是可以运行并且修改的。
+
+按下播放按钮或按 `ctrl(option) + enter` 可以播放声音。按下停止按钮或 `ctrl(command) + .` 来停止声音。(正常来说，mac用户按 `option + .` 也可以停止声音，但是在这个worksheet中由于某些技术原因无法使用。)
+
+更改代码以后需要按update按钮或者再次按 `ctrl(option) + enter` 来应用更新的代码。
+一些声音在第一次播放时会卡顿或者静音，这是正常的情况请不要担心。
+
+如果你弄丢了worksheet中原来的代码，刷新页面就会恢复啦。这也代表着，**⚠️你在这里写的任何代码都不会被保存⚠️**。因此在学习完知识后，请移步到 [strudel.cc](https://strudel.cc/) 来继续玩耍！
+
+# 基础知识
+
+以下是一个我们在 Strudel 中编写基本pattern的方法。
+- 其中sound是一个函数，告诉strudel我们想要播放声音
+- 在引号中，我们可以写下想要播放的声音。在这里，我们尝试播放一个乌鸦的叫声 🐦‍⬛
+
+<MiniRepl client:visible tune={`sound("crow")`} />
+
+恭喜！你已经用live coding的方式制造出了第一个动静。接下来让我试试看，如果在pattern里放入更多的声音会发生什么。
+
+<MiniRepl client:visible tune={`sound("bd hh sd hh bd hh sd crow")`} />
+<Box>
+如果以上这些声音的名称对你来说很陌生也没关系！这是一些鼓组的不同部分的缩写，可以通过以下这张图来认识一下鼓组中不同的组件。
+
+<Image src={drumset} alt="drum set" width={500} />
+
+<a class="text-right text-xs" href="https://de.wikipedia.org/wiki/Schlagzeug#/media/Datei:Drum_set.svg" target="_blank">
+  原图来自 Pbroks13
+</a>
+
+常见的鼓组缩写如下：
+- bd = bass drum
+- sd = snare drum
+- rim = rimshot
+- hh = hihat
+- oh = open hihat
+- lt = low tom
+- mt = middle tom
+- ht = high tom
+- rd = ride cymbal
+- cr = crash cymbal
+
+</Box>
+
+嗯...🤔 如果放入更多的声音的话呢？
+
+<MiniRepl client:visible tune={`sound("bd hh sd hh bd hh sd crow bd hh sd oh bd hh crow crow")`} />
+
+我们会发现pattern的运行变得更快、更密集了。这是因为 strudel 在后台有一个固定时间的“循环”。pattern中的任何声音都将在一个周期内运行，strudel 也会尝试均匀地分布这些声音。
+
+我们可以用 `._spiral()` 来可视化循环的概念 🌀
+
+如上所述，“咚次哒次”的速度会...
+<MiniRepl client:visible tune={`sound("bd hh sd hh")._spiral()`} />
+
+比“咚次哒次咚咚哒次”来得慢！如果我们观察可视化的spiral图形会发现，在上面这行代码中，一个循环被平均分成了4份，下面这行代码则是8份。
+
+<MiniRepl client:visible tune={`sound("bd hh sd hh bd bd sd hh"._spiral())`} />
+<Box>
+你也可以理解为，这段代码包含了8个step/8步/8个事件......
+你只要以你最好接受的方式来理解它即可。
+</Box>
+
+**简单来讲，序列的步数越多，播放的速度也就越快！**
+
+另外，strudel中有许多的缩写，比如我们可以用s来代表sound。
+<MiniRepl client:visible tune={`s("mt rim lt oh")`} />
+
+现在，让我们来看看如何同时发出多个声音。
+
+<MiniRepl
+  client:visible
+  tune={`$: s("bd sd rim bd")
+$: s("hh hh hh hh hh hh hh hh")`}
+/>
+
+我们只需要在一行的前面添加 ` $ ` 符号和冒号就可以同时制造不同的声音。如上面所说的一样，虽然包含的声音数量不同，但第一行代码和第二行代码运行的速度是一致的。
+
+如果你不喜欢美元符号背后折射出的资本主义与霸权主义，你也可以通过设立名称的方式来播放多个声音。（为了便利，本worksheet还是继续用 ` $ ` 符号）
+
+<MiniRepl
+  client:visible
+  tune={`TOMS: s("mt mt lt ht")
+HATS: s("hh hh hh oh hh hh hh crow")`}
+/>
+
+如何单独停止某一行代码呢？通常有两种方法。
+首先，你可以在一行代码中按 `ctrl(command) + /` 来注释掉或者反注释一段代码。被注释的代码被视为字符，不会被运行。
+当然，手动在代码最前面输入 ` // ` 也可以。
+<MiniRepl
+  client:visible
+  tune={`$: s("bd sd rim bd")
+$: s("hh hh hh hh hh hh hh hh")
+//$: s("cp - cp -")
+//你可以用注释的方式来留下一些文字信息 /ᐠ .ᆺ. ᐟ\ﾉ`}
+/>
+另一种方法是在 ` $ ` 符号或者你的自定义命名的前面或者后面写下一个下划线 ` _ ` 。
+
+<MiniRepl
+  client:visible
+  tune={`$: s("bd sd rim bd")
+$_: s("hh hh hh hh hh hh hh hh")
+_$: s("cp - cp -")`}
+/>
+
+接下来，请尝试亲手写一些代码吧！
+
+提示：只有一行发出声音的代码时，是否使用 ` $ ` 符号或设立名称都无所谓。
+
+<MiniRepl client:visible tune={``} />
+<Box>
+除了上面提到的鼓组的声音，你也可以尝试以下声音！
+
+**insect  wind  jazz  metal  east  crow  casio  space  numbers**
+
+（小提示：你可以通过双击来快速选中某个词语）
+</Box>
+
+# 基础语法
+
+Strudel有一套的非常棒的语法（mininotation），它可以帮你快速地构建丰富的pattern。
+比如我们可以用乘号 ` * ` 来加快声音在序列中播放的速度。
+
+<MiniRepl client:visible tune={`s("hh*4")`} />
+<MiniRepl client:visible tune={`s("hh*8")`} />
+<MiniRepl client:visible tune={`s("hh*16")`} />
+
+对应地，我们也可以用除号 ` / ` 来减慢声音在序列中播放的速度。
+
+<MiniRepl client:visible tune={`s("hh/2")`} />
+<MiniRepl client:visible tune={`s("hh/4")`} />
+<MiniRepl client:visible tune={`s("hh/16")`} />
+
+`s("hh/2")` 代表着每2个循环只触发一次hh的声音。`s("hh/4")` 则是每4个循环只触发一次，`s("hh/16")`则是16个循环。
+
+使用 ` - ` 或者 ` ~ ` 则可以创建一个休止符。它会在序列中占据一个声音的位置，但实际上又不播放任何声音。这在创建特定pattern时很有帮助！
+
+<MiniRepl client:visible tune={`s("bd - bd - bd bd bd -")`} />
+
+另外，我们可以 ` : ` 来选择不同的采样。你也可以尝试更改冒号后面的数字来切换不同的声音。
+
+<MiniRepl
+  client:visible
+  tune={`$: s("bd:1*4")
+$: s("hh:2*8")
+$: s("- sd:3")`}
+/>
+
+每个声音其实都是一个文件夹，文件夹里可以存放许多个文件。比如 ` bd ` 这个文件夹里实际上有8个文件，因此我们总共有8种不同的的bd可以使用。在默认情况下，strudel会播放第“0”个采样，这是因为在计算机语言中是从0开始计数的。
+
+除了冒号，我们也可以用 ` n `来选择不同的采样。
+
+<MiniRepl
+  client:visible
+  tune={`s("jazz*8").n("0 1 2 3 4 5 6 7")`}
+/>
+<Box>
+一些采样不同的序号之间存在很大的差异，比如 ` jazz `。
+
+其它的一些采样则可能只有音调上的差异，比如 ` metal `。
+
+(` n ` 代表了number)
+</Box>
+
+
+接下来，我们可以通过子序列创造更多变化。我们可以用方括号 ` [] ` 来把序列中的一步拆解成更小的pattern。我们可以用 ` ._punchcard ` 来进行可视化。在其中设置 `{labels: 1}` 则可以在punchcard上标注每个声音的名称。
+
+<MiniRepl
+  client:visible
+  tune={`s("bd bd [lt mt ht] bd")._punchcard({labels:1})`}
+/>
+
+可以观察到，`[lt mt ht]` 的部分变得更密集、紧凑，且其整体长度与其它的 `bd` 相同。因此， ` [] ` 内部无论有多少声音，都会在一步的时间内被播放完。
+
+当然，我们也可以在子序列之中嵌套更多的子序列。
+
+<MiniRepl
+  client:visible
+  tune={`s("bd bd bd [hh [cp cp]]")._punchcard({labels:1})`}
+/>
+
+在以上情况里，我们可以看到 `[hh [cp cp]]` 的长度与 ` bd `相同。在方括号的内部，`hh`的长度则与 `[cp cp]` 相同。
+
+此外，我们可以用尖括号 ` <> ` 来跨越循环制造变化。尖括号内的事件每个循环只会触发一个。
+
+<MiniRepl
+  client:visible
+  tune={`s("bd - <cp [sd cb]> bd")._punchcard({labels:1})`}
+/>
+
+在以上情况中，第一个循环播放的是： `s("bd - cp bd")` ，第二个循环则是： `s("bd - [sd cb] bd")` ，如此循环往复。
+
+使用 ` , ` 可以创造两个并行的声音。如此写的话，后续的函数会影响到括号内的所有声音。比如此处` .n(1) ` 使得第一行的所有声音都播放了1号采样。
+
+<MiniRepl
+  client:visible
+  tune={`$: s("[bd cp]*4, - <sd rim*4>").n(1)
+$: s("hh*16")`}
+/>
+
+接下来是 ` ! ` ，它代表复制的意思。
+<MiniRepl
+  client:visible
+  tune={`s("hh!7 oh")`}
+/>
+因此以上代码等同于以下代码。
+<MiniRepl
+  client:visible
+  tune={`s("hh hh hh hh hh hh hh oh")`}
+/>
+在某些情况下 ` ! ` 和 ` * ` 可以制造一模一样的效果，因此可能有一些混淆。你可以尝试播放下列代码来分析其差异。
+<MiniRepl
+  client:visible
+  tune={`s("hh*7 oh")._punchcard()`}
+/>
+<MiniRepl
+  client:visible
+  tune={`s("hh!7 oh")._punchcard()`}
+/>
+可以看到，`s("hh*7 oh")` 实际上是2步的序列，其中 `hh*7` 会在一步之内快速播放完。而 `s("hh!7 oh")` 则是8步的序列，每个 `hh` 都占用了1步。
+
+
+<Box>
+挑战：
+
+🤔 你知道为什么下列两段代码听起来一模一样吗？
+<MiniRepl
+  client:visible
+  tune={`s("hh!8")._punchcard()`}
+/>
+<MiniRepl
+  client:visible
+  tune={`s("hh*8")._punchcard()`}
+/>
+</Box>
+
+<br />
+<br />
+# 创造律动的函数
+
