@@ -26,7 +26,7 @@ import drumset from '../../img/drumset.png';
 # 基础知识
 
 以下是一个我们在 Strudel 中编写基本pattern的方法。
-- 其中sound是一个函数，告诉strudel我们想要播放声音
+- 其中sound是一个功能，告诉strudel我们想要播放声音
 - 在引号中，我们可以写下想要播放的声音。在这里，我们尝试播放一个乌鸦的叫声 🐦‍⬛
 
 <MiniRepl client:visible tune={`sound("crow")`} />
@@ -120,7 +120,7 @@ _$: s("cp - cp -")`}
 
 接下来，请尝试亲手写一些代码吧！
 
-提示：只有一行发出声音的代码时，是否使用 ` $ ` 符号或设立名称都无所谓。
+**提示**：只有一行发出声音的代码时，是否使用 ` $ ` 符号或设立名称都无所谓。
 
 <MiniRepl client:visible tune={``} />
 <Box>
@@ -128,7 +128,7 @@ _$: s("cp - cp -")`}
 
 **insect  wind  jazz  metal  east  crow  casio  space  numbers**
 
-（小提示：你可以通过双击来快速选中某个词语）
+**（小提示：你可以通过双击来快速选中某个词语）**
 </Box>
 
 # 基础语法
@@ -205,7 +205,7 @@ $: s("- sd:3")`}
 
 在以上情况中，第一个循环播放的是： `s("bd - cp bd")` ，第二个循环则是： `s("bd - [sd cb] bd")` ，如此循环往复。
 
-使用 ` , ` 可以创造两个并行的声音。如此写的话，后续的函数会影响到括号内的所有声音。比如此处` .n(1) ` 使得第一行的所有声音都播放了1号采样。
+使用 ` , ` 可以创造两个并行的声音。如此写的话，后续添加的功能会影响到括号内的所有声音。比如此处` .n(1) ` 使得第一行的所有声音都播放了1号采样。
 
 <MiniRepl
   client:visible
@@ -236,7 +236,7 @@ $: s("hh*16")`}
 
 
 <Box>
-挑战：
+**挑战：**
 
 🤔 你知道为什么下列两段代码听起来一模一样吗？
 <MiniRepl
@@ -247,9 +247,136 @@ $: s("hh*16")`}
   client:visible
   tune={`s("hh*8")._punchcard()`}
 />
+<br />
 </Box>
 
-<br />
-<br />
-# 创造律动的函数
+最后，我们可以用 `?` 来使得某个声音有50%的概率不触发。
+<MiniRepl
+  client:visible
+  tune={`s("hh*32?")._punchcard()`}
+/>
+实际上 `?` 等同于 `?0.5` 。这也就是说，我们可以通过更改问号后的数字来控制声音消减的概率。
+<MiniRepl
+  client:visible
+  tune={`s("hh*32?0.9")._punchcard()`}
+/>
+尝试运用一些上面提到的语法来写一小段节奏吧 🪩
+<MiniRepl client:visible tune={``} />
 
+<br />
+<br />
+# 创造律动的功能
+strudel有很多的功能（可以在 [strudel.cc](https://strudel.cc/)  -> 右侧的小箭头 -> Reference 里查看 ），功能之间可以用 `.` 链接起来。
+
+但这在演出中可能会成为问题：
+- 记住所有这些内容并不现实
+- 在表演中，我们希望简化决策过程
+- 有些功能需要复杂的语法和/或大量输入
+
+所以，我们只需要挑选一些最喜欢的功能来用就好啦。我会在这里讲分享一些专注于节奏与律动的的功能，等你更有经验了，可以探索更多你喜欢的可能！
+
+`euclid` :改变pattern，形成[欧几里得节奏](https://en.wikipedia.org/wiki/Euclidean_rhythm)。这个功能有快捷写法，只需要在声音后面添加括号和两个参数 ` (k,n) ` 就可以使用。其中 `k` 代表触发声音的步数， `n` 的代表总共的步数。
+在下列代码的案例中，代表着jazz:5这个声音会在8步的长度内尽量均匀地触发3次。使用`euclid` 可以让我们用非常简短的代码就创造非常丰富的节奏！
+
+<MiniRepl
+  client:visible
+  tune={`$: s("jazz*4,hh:1*16")
+$: s("jazz:5(3,8)")
+//⬆️上面这行代码这也等同于⬇️
+//$: s("jazz").n(5).euclid(3,8)
+//⬆️上面这行代码这也等同于⬇️
+//$: s("jazz - - jazz - - jazz -").n(5)`}
+/>
+<Box>
+尝试更改扩号内的第一个数（`k`）：
+- 比如其它无法被 `n` 整除的数字，比如1，5，7
+- 也试试可以被整除的数字，比如2，4，8
+<br />
+**提示**:
+
+如果用尖括号 `<>` 给k值也添加一个pattern的话...?
+</Box>
+
+`bank` :选择要使用的音色库。与 `s` 一起使用。这个功能通常只对鼓组的声音起效果。本质上是便捷地更改声音名称的方式。在以下案例中，使用bank规避了反复写 `tr909_` 这个前缀。
+<MiniRepl
+  client:visible
+  tune={`$:s("bd*4,- sd,hh*16").bank("tr909")
+//⬆️上面这行代码这也等同于⬇️
+//$: s("tr909_bd*4,- tr909_sd,tr909_hh*16")`}
+/>
+<Box>
+可以尝试更换 `bank` 里的内容为其它鼓机的名称，比如：
+- `ace`
+- `akailinn`
+- `d70`
+- `tr808`
+
+更多选项可以在 [strudel.cc](https://strudel.cc/)  -> 右侧的小箭头 -> sounds -> drum_machines 里查看 ）
+</Box>
+
+` fast ` :加快**pattern**运行的速度。在下面的案例中，第二行的 `s("hh -!2 hh -!2 hh -")`每个循环会运行两次。
+<MiniRepl
+  client:visible
+  tune={`$:s("bd sd bd cp").bank("d70")
+$:s("hh -!2 hh -!2 hh -").bank("tr808").fast(2)`}
+/>
+<Box>
+**提示：**
+
+把fast换成slow的话......？
+</Box>
+
+` speed `: 加快**声音**播放的速度。与fast不同，它只针对声音本身起效，而非pattern。数值为1则没有变化，小于1会减速，降低声调，大于1会加速，提高声调。
+<MiniRepl
+  client:visible
+  tune={`$:s("[- oh]*4").speed("<1 .8 1 1.2>*4")`}
+/>
+
+` hurry `: 同时应用 `fast` 与 `speed` 。
+<MiniRepl
+  client:visible
+  tune={`$:s("bd*4,cb(3,8)").bank("tr707")
+$:s("sd*2").hurry("<1 2 4 8>")._punchcard()`}
+/>
+
+` struct ` :使得声音以指定结构的pattern触发。 `x` 代表触发声音，休止符 `-` 或 `~` 则代表略过声音。使用这个功能的好处是可以让你的pattern变得很明确。它也可以和 `euclid` 一起使用。
+<MiniRepl
+  client:visible
+  tune={`$:s("bd*4").bank("tr909")
+$:s("jazz:5").struct("x - - x - - - x - - x - - x - x")
+$:s("cp").struct("x(3,8)")`}
+/>
+
+
+` beat ` :通过对循环的分割来创建pattern结构，特别适合创造节奏。其中第一个参数代表了要在第几步触发声音，第二个参数代表要把一个循环分割为多少步。这个功能的好处在于特别的结构化，还可以通过输入浮点数的方式来创造律动！
+
+<MiniRepl
+  client:visible
+  tune={`//D&B风格的鼓组
+  $:s("bd:1").beat("0,3,5",8)
+  //⬆️ 一个循环均分为8步，在第1步，第4步，第6步触发bd
+  $:s("sd:6").beat("2,6",8)
+  //⬆️ 一个循环均分为8步，在第3步，第7步触发sd
+  $:s("hh*8").bank("d70")`}
+/>
+<Box>
+**提示：**
+
+把第一行的3改成3.5的话...?
+</Box>
+
+### 练习
+试着用非常简单的函数和几个声音写一些pattern吧！
+
+**提示：**
+- 你可以用我上面用过的功能/声音，或者如果你知道的话用其他的
+- 尽量选择你喜欢的声音， 但不要写太多代码，你不需要使用所有涉及到的功能
+- 不要害怕删除并重新开始！
+- 现阶段请你尽量限制声音的数量
+- 别忘了可以使用方括号和尖括号来丰富pattern，甚至是功能内的pattern！
+- 如果你想尝试其他声音，不妨用这些： **insect wind jazz metal east crow casio space numbers**
+
+<MiniRepl
+  client:visible
+  tune={``}
+/>
