@@ -7,6 +7,7 @@ import { MiniRepl } from '../../docs/MiniRepl';
 import Box from '../../components/Box.astro';
 import { Image } from 'astro:assets';
 import drumset from '../../img/drumset.png';
+import QA from '../../components/QA';
 
 
 嗨，欢迎来到Joey的strudel workshop！在这里，我们的目标是快速地让初学者们掌握strudel的基础以及创造律动的方法。
@@ -265,7 +266,7 @@ $: s("hh*16")`}
 
 <br />
 <br />
-# 创造律动的功能
+# 用功能构建声音与节奏
 strudel有很多的功能（可以在 [strudel.cc](https://strudel.cc/)  -> 右侧的小箭头 -> Reference 里查看 ），功能之间可以用 `.` 链接起来。
 
 但这在演出中可能会成为问题：
@@ -282,9 +283,9 @@ strudel有很多的功能（可以在 [strudel.cc](https://strudel.cc/)  -> 右�
   client:visible
   tune={`$: s("jazz*4,hh:1*16")
 $: s("jazz:5(3,8)")
-//⬆️上面这行代码这也等同于⬇️
+// ⬆️ 上面这行代码这也等同于 ⬇️
 //$: s("jazz").n(5).euclid(3,8)
-//⬆️上面这行代码这也等同于⬇️
+// ⬆️ 上面这行代码这也等同于 ⬇️
 //$: s("jazz - - jazz - - jazz -").n(5)`}
 />
 <Box>
@@ -294,14 +295,15 @@ $: s("jazz:5(3,8)")
 <br />
 **提示**:
 
-如果用尖括号 `<>` 给k值也添加一个pattern的话...?
+- 如果用尖括号 `<>` 给k值也添加一个pattern的话...?
+- 在括号里再加入第3个参数的话...?
 </Box>
 
 `bank` :选择要使用的音色库。与 `s` 一起使用。这个功能通常只对鼓组的声音起效果。本质上是便捷地更改声音名称的方式。在以下案例中，使用bank规避了反复写 `tr909_` 这个前缀。
 <MiniRepl
   client:visible
   tune={`$:s("bd*4,- sd,hh*16").bank("tr909")
-//⬆️上面这行代码这也等同于⬇️
+// ⬆️ 上面这行代码这也等同于 ⬇️
 //$: s("tr909_bd*4,- tr909_sd,tr909_hh*16")`}
 />
 <Box>
@@ -354,9 +356,9 @@ $:s("cp").struct("x(3,8)")`}
   client:visible
   tune={`//D&B风格的鼓组
   $:s("bd:1").beat("0,3,5",8)
-  //⬆️ 一个循环均分为8步，在第1步，第4步，第6步触发bd
+  // ⬆️ 一个循环均分为8步，在第1步，第4步，第6步触发bd
   $:s("sd:6").beat("2,6",8)
-  //⬆️ 一个循环均分为8步，在第3步，第7步触发sd
+  // ⬆️ 一个循环均分为8步，在第3步，第7步触发sd
   $:s("hh*8").bank("d70")`}
 />
 <Box>
@@ -380,3 +382,117 @@ $:s("cp").struct("x(3,8)")`}
   client:visible
   tune={``}
 />
+
+<br/>
+<br/>
+# 用功能进一步丰富pattern
+接下来让我们看看更多可以丰富pattern的功能。
+
+`rarely`/`sometimes`/`often`/`almostAlways`/`almostNever`/`sometimesBy` : 有一定概率触发指定的功能。
+
+具体来说： 
+- `almostNever`: 10%
+- `rarely`: 25%
+- `sometimes`: 50%
+- `often`: 75%
+- `almostAlways`: 90%
+
+如果这些单词和概率的对应关系对你来说很模糊，你也可以总是使用 `sometimesBy` 。在这个功能中，你需要传入2个参数，第一个为触发的概率，第二个为触发的功能。
+
+<MiniRepl
+  client:visible
+  tune={`$:s("<bd [- bd]!2 ->*2,<- sd>*2").n(1)
+$:s("hh!8").bank("tr808").rarely(ply(4))
+$:s("cb(3,8)").bank("tr808").sometimes(x=>x.speed(.8))
+$:s("metal").speed(1.2)
+.sometimesBy(.35,struct("x - - x - - - x - - x - - x - x"))
+._punchcard()`}
+/>
+<Box>
+代码开始变得复杂了一些，如果你开始看不懂了也不要有压力，这并不是我即兴创作出来的东西 ：）
+
+**提示：**
+
+- 第二行的 `ply` 功能可以重复触发某个事件。在这里，`rarely(ply(4))` 代表着有25%的概率快速重复4次 `hh`。
+- 你不需要太担心第3行中的 `x=>x` 这个部分。它仅是代表着让指定的pattern应用特定的功能。你可能发现了，在第2行和第4行中，似乎 `x=>x` 被省略了。
+其省略的规则我们暂时不展开，如果你觉得很困惑也可以一律添加上 `x=>x` 这个部分，并没有影响。
+
+</Box>
+
+`every`: 每n个循环触发一次指定的功能。
+<MiniRepl
+  client:visible
+  tune={`$:s("bd").beat("0, 1, 3, 5, 7, 11, 13", 16).slow(2)
+$:s("- sd").every(3,ply(2))
+$:s("hh*16?").every(6,x=>x.speed(1.2))`}
+/>
+
+`jux`: 仅在右声道上应用指定的功能，产生奇怪的立体声效果。
+<MiniRepl
+  client:visible
+  tune={`$:s("hh*4,<- sd:1>*2,bd(5,8)").n(4)
+$: sound("metal(3,8)").n("<0 5 6>*3")
+.hurry("<1 2>/2")
+.jux(rev)`}
+/>
+<Box>
+` rev ` 会使得pattern以相反的反向运行。
+</Box>
+
+到现在为止，你已经学到了很多功能啦，我设立了一个挑战供你完成！但在那之前，我要再补充一个重要的基础概念：`cpm`
+
+没错是 `cpm` 而不是bpm...！如果你不熟悉的话，bpm指的是Beats Per Minute，它是衡量音乐速度的单位，表示一分钟内有多少拍。常见的bpm范围很广，抒情的歌可能在80-100左右，而电子舞曲可能在120-140左右。
+
+
+cpm与bpm的概念，它指的是Cycles Per Minute，也就是每分钟循环数。因为strudel是基于循环的所以使用这个概念更加合理。
+
+我们可以使用`setcpm`来改变整体的速度。简而言之，我们把想要设定的bpm除以4就是需要设定的cpm值啦。
+
+strudel的默认cpm值为 `120/4`，也就是120bpm。
+<MiniRepl
+  client:visible
+  tune={`// ⬇️ 140bpm
+  setcpm(140/4)
+  // ⬆️ 尝试更改cpm值来感受速度的变化！
+  $:s("bd:4*4,[- sd:2]*2,hh:2*16")`}
+/>
+
+### 挑战
+接下来，请你尝试为这段旋律配一段充满律动的鼓组。请暂时不要把注意力放在已经写好的旋律部分，只需要专注于鼓！
+
+<MiniRepl
+  client:visible
+  tune={`setcpm(95/4)
+
+BASS:note("<[c2 - c2 -][- b1 - b1][f2 - f2 -][- g2 - c2]>")
+  .speed("<0.9 1.1>").s("gm_acoustic_bass").lpf(1200)
+
+PIANO:chord("Cm7 Bb7 Fm7 G7")
+    .voicing().struct("- x - [- x] - x - -").dec(.8)
+  .slow(2).s("piano").room(.3).delay(.125).rarely(ply(2))
+
+SAX:note("<[- eb4@3][d4@2 c4 bb3][- ab3 c4 eb4][d4@3 [eb4 c4]]>")
+  .off(1/64,x=>x.trans(7)).room(.2).hpf(650).s("gm_soprano_sax")
+
+SFX:s("crackle*32?0.4").rel(.5).lpf(2500).gain(1.5)
+  .density("<0.2 0.5>*32".slow(2))
+
+   // ⬇️ 从这里开始写你的代码
+   `}
+/>
+<Box>
+**💡提示：**
+- 设置鼓组的步长为2的倍数（比如2、4、8、16等），来匹配节奏
+- 不需要太复杂的结构
+- 让声音有一些“偏差“，稍早一些或者稍晚一些触发也可以产生律动
+- 音色可能比想象的更重要
+
+<QA q="点击查看更多提示" client:visible>
+
+- 可以用jazz采样来构成鼓组：**jazz:0 jazz:3 jazz:6 jazz:7**
+- **shaker_small** 也是不错的配器！
+
+</QA>
+
+
+</Box>
