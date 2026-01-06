@@ -6,15 +6,9 @@ import rehypeSlug from 'rehype-slug';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import tailwind from '@astrojs/tailwind';
 
-// GitHub Pages configuration
-// For user/org pages (e.g., username.github.io): leave base as '/'
-// For project pages (e.g., github.com/username/repo): set base to '/repo/'
-const site = process.env.SITE_URL || 'https://joeys-workshop.vercel.app';
-const base = process.env.BASE_URL || '/';
-
 export default defineConfig({
-  site,
-  base,
+  site: 'https://joeys-workshop.vercel.app',
+  base: '/',
   integrations: [
     react(),
     mdx({
