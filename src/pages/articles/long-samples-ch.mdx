@@ -1,0 +1,24 @@
+# 处理较长的采样
+
+较长的采样需要不同的处理方式，如果不小心，可能会在演奏中带来一些问题。
+strudel没有内置太多长样本，所以我们会从外部引入一些采样 —— 更多信息请参见[这里](https://strudel.cc/learn/samples/#loading-custom-samples)。
+在平时的演奏中，你可以直接从strudel中通过点击的方式来载入本地采样：[strudel.cc](https://strudel.cc/)  -> 右侧的小箭头 -> sounds -> import-sounds
+在这个worksheet中，我们先从github上引入采样。
+
+`loopAt` 可以让我们将采样与指定的循环数同步，在下面的案例中，采样每4个循环重复一次。
+
+<MiniRepl
+  client:visible
+  tune={`samples('github:zhouyuyang-joey/joey-workshop-samples')
+  $:s("breaks4").loopAt(4)`}
+/>
+
+
+<MiniRepl
+  client:visible
+  tune={`samples('github:zhouyuyang-joey/joey-workshop-samples')
+  $:s("breaks4").loopAt("<4 <1 2>>")
+.cut(1)
+.iter(4)
+.chop("<1 1 2 4>")`}
+/>

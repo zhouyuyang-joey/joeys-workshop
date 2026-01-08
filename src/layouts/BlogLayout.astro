@@ -17,7 +17,7 @@ const { frontmatter } = Astro.props as Props;
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
-    <title>{frontmatter.title ? `${frontmatter.title} - Joey's Strudel Workshop` : "Joey's Strudel Workshop"}</title>
+    <title>{frontmatter.title ? `${frontmatter.title} - Joey's Workshop` : "Joey's Workshop"}</title>
     <meta name="description" content={frontmatter.description || CONFIG.SITE.description} />
   </head>
 
@@ -26,7 +26,7 @@ const { frontmatter } = Astro.props as Props;
       <nav class="max-w-6xl mx-auto px-6 py-6 site-header">
         <h1 class="text-2xl font-bold text-primary">
           <a href="/">
-            <Image src={joeysworkshop} alt={CONFIG.SITE.title} width={160} class="h-10" />
+            <Image src={joeysworkshop} alt={CONFIG.SITE.title} width={180} class="h-10" />
           </a>
         </h1>
       </nav>
@@ -41,7 +41,7 @@ const { frontmatter } = Astro.props as Props;
 
     <footer class="border-t border-lineHighlight mt-12">
       <div class="max-w-6xl mx-auto px-6 py-6 text-center text-gray-400 text-sm">
-        <p>© 2026 Joey's Strudel Workshop. Based on <a href="https://strudel.cc" class="text-primary hover:underline">Strudel</a></p>
+        <p>© 2026 Joey's Workshop. </p>
       </div>
     </footer>
   </body>

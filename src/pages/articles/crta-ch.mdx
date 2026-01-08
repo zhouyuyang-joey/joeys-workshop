@@ -11,28 +11,37 @@ import QA from '../../components/QA';
 
 
 嗨，欢迎来到Joey的strudel workshop！在这里，我们的目标是快速地让初学者们掌握strudel的基础以及创造律动的方法。
-这份worksheet改编自Lucy Cheesman与官方的workshop。
-请记住live coding无定式，也没有所谓的“最佳实践”。构建同一个效果往往有数种不同的方法！
+内容改编自Lucy Cheesman，感谢Lucy!
 
+请记住live coding无定式，也没有所谓的“最佳实践”。构建同一个效果往往有数种不同的方法！
+<br />
+<br />
 # 关于worksheet
 我们可以在这个页面的worksheet中交互式地编写和运行代码，因此所有的代码块都是可以运行并且修改的。
+<MiniRepl client:visible tune={`sound("crow")`} />
+- 按下播放按钮或按 `ctrl(option) + enter` 可以播放声音。
 
-按下播放按钮或按 `ctrl(option) + enter` 可以播放声音。按下停止按钮或 `ctrl(command) + .` 来停止声音。(正常来说，mac用户按 `option + .` 也可以停止声音，但是在这个worksheet中由于某些技术原因无法使用。)
+- 按下停止按钮或 `ctrl(command) + .` 来停止声音。(正常来说，mac用户按 `option + .` 也可以停止声音，但是在这个worksheet中由于某些技术原因无法使用。)
 
-更改代码以后需要按update按钮或者再次按 `ctrl(option) + enter` 来应用更新的代码。
-一些声音在第一次播放时会卡顿或者静音，这是正常的情况请不要担心。
+- 更改代码以后需要按update按钮或者再次按 `ctrl(option) + enter` 来应用更新的代码。
 
-如果你弄丢了worksheet中原来的代码，刷新页面就会恢复啦。这也代表着，**⚠️你在这里写的任何代码都不会被保存⚠️**。因此在学习完知识后，请移步到 [strudel.cc](https://strudel.cc/) 来继续玩耍！
+- 一些声音在第一次播放时会卡顿或者静音，这是正常的情况请不要担心。
 
+- 请注意全角（中文）半角（英文）符号的区别，在编写代码时，应当使用半角（英文）的符号。
+
+
+如果你弄丢了worksheet中原来的代码，或者产生了奇怪的bug，请尝试刷新页面。
+
+**⚠️ 你在这里写的任何代码都不会被保存 ⚠️**。因此在学习完知识后，请移步到 [strudel.cc](https://strudel.cc/) 来继续玩耍！
+<br />
+<br />
 # 基础知识
 
-以下是一个我们在 Strudel 中编写基本pattern的方法。
+以下是一个我们在 strudel 中编写基本pattern的方法。
 - 其中sound是一个功能，告诉strudel我们想要播放声音
-- 在引号中，我们可以写下想要播放的声音。在这里，我们尝试播放一个乌鸦的叫声 🐦‍⬛
-
-<MiniRepl client:visible tune={`sound("crow")`} />
-
-恭喜！你已经用live coding的方式制造出了第一个动静。接下来让我试试看，如果在pattern里放入更多的声音会发生什么。
+- 在引号中，我们可以写下想要播放的声音。这些声音会以序列的形式被播放。在这里，我们尝试播放乌鸦的叫声 🐦‍⬛
+<MiniRepl client:visible tune={`sound("crow crow")`} />
+恭喜！你已经用live coding的方式制造出了第一个动静。接下来让我试试看，如果在序列里放入更多的声音会发生什么。
 
 <MiniRepl client:visible tune={`sound("bd hh sd hh bd hh sd crow")`} />
 <Box>
@@ -62,7 +71,7 @@ import QA from '../../components/QA';
 
 <MiniRepl client:visible tune={`sound("bd hh sd hh bd hh sd crow bd hh sd oh bd hh crow crow")`} />
 
-我们会发现pattern的运行变得更快、更密集了。这是因为 strudel 在后台有一个固定时间的“循环”。pattern中的任何声音都将在一个周期内运行，strudel 也会尝试均匀地分布这些声音。
+我们会发现序列的运行变得更快、更密集了。这是因为 strudel 在后台有一个固定时间的“循环”。序列中的任何声音都将在一个周期内运行，strudel 也会尝试均匀地分布这些声音。
 
 我们可以用 `._spiral()` 来可视化循环的概念 🌀
 
@@ -73,8 +82,7 @@ import QA from '../../components/QA';
 
 <MiniRepl client:visible tune={`sound("bd hh sd hh bd bd sd hh"._spiral())`} />
 <Box>
-你也可以理解为，这段代码包含了8个step/8步/8个事件......
-你只要以你最好接受的方式来理解它即可。
+我们也可以说，这段代码包含了**8个step/8步/8个事件**
 </Box>
 
 **简单来讲，序列的步数越多，播放的速度也就越快！**
@@ -90,7 +98,7 @@ import QA from '../../components/QA';
 $: s("hh hh hh hh hh hh hh hh")`}
 />
 
-我们只需要在一行的前面添加 ` $ ` 符号和冒号就可以同时制造不同的声音。如上面所说的一样，虽然包含的声音数量不同，但第一行代码和第二行代码运行的速度是一致的。
+我们只需要在一行的前面添加 ` $ ` 符号和冒号就可以同时制造不同的声音。如上面所说的一样，虽然包含的声音数量不同，但第一行代码和第二行代码运行的循环是一致的。
 
 如果你不喜欢美元符号背后折射出的资本主义与霸权主义，你也可以通过设立名称的方式来播放多个声音。（为了便利，本worksheet还是继续用 ` $ ` 符号）
 
@@ -107,7 +115,7 @@ HATS: s("hh hh hh oh hh hh hh crow")`}
   client:visible
   tune={`$: s("bd sd rim bd")
 $: s("hh hh hh hh hh hh hh hh")
-//$: s("cp - cp -")
+//$: s("cp cp")
 //你可以用注释的方式来留下一些文字信息 /ᐠ .ᆺ. ᐟ\ﾉ`}
 />
 另一种方法是在 ` $ ` 符号或者你的自定义命名的前面或者后面写下一个下划线 ` _ ` 。
@@ -116,8 +124,9 @@ $: s("hh hh hh hh hh hh hh hh")
   client:visible
   tune={`$: s("bd sd rim bd")
 $_: s("hh hh hh hh hh hh hh hh")
-_$: s("cp - cp -")`}
+_$: s("cp cp")`}
 />
+### 练习
 
 接下来，请尝试亲手写一些代码吧！
 
@@ -131,10 +140,11 @@ _$: s("cp - cp -")`}
 
 **（小提示：你可以通过双击来快速选中某个词语）**
 </Box>
-
+<br />
+<br />
 # 基础语法
 
-Strudel有一套的非常棒的语法（mininotation），它可以帮你快速地构建丰富的pattern。
+strudel有一套的非常棒的语法（mininotation），它可以帮你快速地构建丰富的pattern。
 比如我们可以用乘号 ` * ` 来加快声音在序列中播放的速度。
 
 <MiniRepl client:visible tune={`s("hh*4")`} />
@@ -143,13 +153,13 @@ Strudel有一套的非常棒的语法（mininotation），它可以帮你快速�
 
 对应地，我们也可以用除号 ` / ` 来减慢声音在序列中播放的速度。
 
-<MiniRepl client:visible tune={`s("hh/2")`} />
-<MiniRepl client:visible tune={`s("hh/4")`} />
-<MiniRepl client:visible tune={`s("hh/16")`} />
+<MiniRepl client:visible tune={`s("bd hh/2 sd hh")`} />
+<MiniRepl client:visible tune={`s("bd hh/4 sd hh")`} />
+<MiniRepl client:visible tune={`s("bd hh/16 sd hh")`} />
 
-`s("hh/2")` 代表着每2个循环只触发一次hh的声音。`s("hh/4")` 则是每4个循环只触发一次，`s("hh/16")`则是16个循环。
+`hh/2` 代表着每2个循环只触发一次 `hh` 的声音。`hh/4` 则是每4个循环只触发一次，`hh/16`则是16个循环。
 
-使用 ` - ` 或者 ` ~ ` 则可以创建一个休止符。它会在序列中占据一个声音的位置，但实际上又不播放任何声音。这在创建特定pattern时很有帮助！
+使用 ` - ` 或者 ` ~ ` 则可以创建一个休止符。它会在序列中占据一步的位置，但实际上又不播放任何声音。这在创建特定pattern时很有帮助！
 
 <MiniRepl client:visible tune={`s("bd - bd - bd bd bd -")`} />
 
@@ -164,11 +174,11 @@ $: s("- sd:3")`}
 
 每个声音其实都是一个文件夹，文件夹里可以存放许多个文件。比如 ` bd ` 这个文件夹里实际上有8个文件，因此我们总共有8种不同的的bd可以使用。在默认情况下，strudel会播放第“0”个采样，这是因为在计算机语言中是从0开始计数的。
 
-除了冒号，我们也可以用 ` n `来选择不同的采样。
+除了冒号，我们也可以用另外一个功能 ` n `来选择不同的采样。
 
 <MiniRepl
   client:visible
-  tune={`s("jazz*8").n("0 1 2 3 4 5 6 7")`}
+  tune={`s("bd*8").n("0 1 2 3 4 5 6 7")`}
 />
 <Box>
 一些采样不同的序号之间存在很大的差异，比如 ` jazz `。
@@ -177,7 +187,24 @@ $: s("- sd:3")`}
 
 (` n ` 代表了number)
 </Box>
+（以下部分可能有点让人困惑，如果现在不明白也别太担心！）
 
+或者，我们也可以在 `n` 中创建序列，然后再指定触发的声音。这也代表着，我们可以用任意顺序来链接这些函数， `s` 并不一定要是最开头的那个。
+
+<MiniRepl
+  client:visible
+  tune={`n("0 4 4 3 5 1 0 2").s("jazz")`}
+/>
+但要注意的是，strudel通常情况下优先使用写在前面的那个pattern，
+<MiniRepl
+  client:visible
+  tune={`s("casio").n("0 2 1 2")`}
+/>
+<Box>
+**提示：**
+
+如果把 `casio` 改成`casio*4` 的话...
+</Box>
 
 接下来，我们可以通过子序列创造更多变化。我们可以用方括号 ` [] ` 来把序列中的一步拆解成更小的pattern。我们可以用 ` ._punchcard ` 来进行可视化。在其中设置 `{labels: 1}` 则可以在punchcard上标注每个声音的名称。
 
@@ -256,12 +283,22 @@ $: s("hh*16")`}
   client:visible
   tune={`s("hh*32?")._punchcard()`}
 />
-实际上 `?` 等同于 `?0.5` 。这也就是说，我们可以通过更改问号后的数字来控制声音消减的概率。
+实际上 `?` 等同于 `?0.5` 。我们也可以通过更改问号后的数字来控制声音消减的概率。
 <MiniRepl
   client:visible
   tune={`s("hh*32?0.9")._punchcard()`}
 />
-尝试运用一些上面提到的语法来写一小段节奏吧 🪩
+掌握了以上的这些基础语法就已经可以创建很丰富的pattern啦。值得一提的是，我们不仅仅可以在 `s` 中创建pattern，也可以在几乎任何其它功能中创建pattern！
+
+我们还没有讲到太多功能，但我们可以先用 `n` 来尝试一下！
+<MiniRepl
+  client:visible
+  tune={`$:s("space*4").n("0 <0 3> 0 2")
+$:n("<0 7> 3 2 [1 4] 0 5 6 4").s("<metal,<wind east>>")`}
+/>
+
+### 练习
+尝试运用以上部分知识来写一小段节奏吧 🪩
 <MiniRepl client:visible tune={``} />
 
 <br />
@@ -274,9 +311,24 @@ strudel有很多的功能（可以在 [strudel.cc](https://strudel.cc/)  -> 右�
 - 在表演中，我们希望简化决策过程
 - 有些功能需要复杂的语法和/或大量输入
 
-所以，我们只需要挑选一些最喜欢的功能来用就好啦。我会在这里讲分享一些专注于节奏与律动的的功能，等你更有经验了，可以探索更多你喜欢的可能！
+所以，我们只需要挑选一些最喜欢的功能来用就好啦。我会在这里讲分享一些专注于改变音色和构建pattern的功能，等你更有经验了，可以探索更多不同的功能！
 
-`euclid` :改变pattern，形成[欧几里得节奏](https://en.wikipedia.org/wiki/Euclidean_rhythm)。这个功能有快捷写法，只需要在声音后面添加括号和两个参数 ` (k,n) ` 就可以使用。其中 `k` 代表触发声音的步数， `n` 的代表总共的步数。
+`gain` :改变音量/增益。默认值为1。
+
+**⚠️ 噪音警告：请勿填入过大的数字 ⚠️**
+<MiniRepl
+  client:visible
+  tune={`$: s("bd*4").bank("linn").gain("1 .2 1.5 .1")
+$: s("hh*16").gain("<.3 .5 1 .7>*16")
+$: s("cr").gain(1.5)`}
+/>
+<Box>
+在strudel中，有一些特殊的书写规则：
+- "0.x" 可以一律写成 ".x"，比如 `"0.3"` 也可以写作 `".3"`
+- 当传入的参数为仅仅一个数字时，可以省略引号。比如 `.gain(1.5)` 和 `.gain("1.5")` 都是可以的
+</Box>
+
+`euclid` :改变pattern，形成[欧几里得节奏](https://en.wikipedia.org/wiki/Euclidean_rhythm)。这个功能有快捷写法，只需要在声音后面添加括号和两个参数 ` (x1,x2) ` 就可以使用。其中 `x1` 代表触发声音的步数， `x2` 的代表总共的步数。
 在下列代码的案例中，代表着jazz:5这个声音会在8步的长度内尽量均匀地触发3次。使用`euclid` 可以让我们用非常简短的代码就创造非常丰富的节奏！
 
 <MiniRepl
@@ -289,14 +341,14 @@ $: s("jazz:5(3,8)")
 //$: s("jazz - - jazz - - jazz -").n(5)`}
 />
 <Box>
-尝试更改扩号内的第一个数（`k`）：
-- 比如其它无法被 `n` 整除的数字，比如1，5，7
+尝试更改扩号内的第一个数（`x1`）：
+- 比如其它无法被 `x2` 整除的数字，比如1，5，7
 - 也试试可以被整除的数字，比如2，4，8
 <br />
 **提示**:
 
 - 如果用尖括号 `<>` 给k值也添加一个pattern的话...?
-- 在括号里再加入第3个参数的话...?
+- 在括号里再加入第3个参数的话...? (euclidRot)
 </Box>
 
 `bank` :选择要使用的音色库。与 `s` 一起使用。这个功能通常只对鼓组的声音起效果。本质上是便捷地更改声音名称的方式。在以下案例中，使用bank规避了反复写 `tr909_` 这个前缀。
@@ -436,7 +488,7 @@ $: sound("metal(3,8)").n("<0 5 6>*3")
 .jux(rev)`}
 />
 <Box>
-` rev ` 会使得pattern以相反的反向运行。
+其中 ` rev ` 会使得pattern以相反的反向运行。
 </Box>
 
 到现在为止，你已经学到了很多功能啦，我设立了一个挑战供你完成！但在那之前，我要再补充一个重要的基础概念：`cpm`
@@ -458,8 +510,9 @@ strudel的默认cpm值为 `120/4`，也就是120bpm。
 />
 
 ### 挑战
-接下来，请你尝试为这段旋律配一段充满律动的鼓组。请暂时不要把注意力放在已经写好的旋律部分，只需要专注于鼓！
+接下来，请你尝试以下的旋律配一段充满律动的鼓组吧！我提供了几种截然不同的风格，选择你更喜欢的其中之一来完成就好。
 
+#### 1.某种lofi/jazz的
 <MiniRepl
   client:visible
   tune={`setcpm(95/4)
@@ -468,13 +521,13 @@ BASS:note("<[c2 - c2 -][- b1 - b1][f2 - f2 -][- g2 - c2]>")
   .speed("<0.9 1.1>").s("gm_acoustic_bass").lpf(1200)
 
 PIANO:chord("Cm7 Bb7 Fm7 G7")
-    .voicing().struct("- x - [- x] - x - -").dec(.8)
-  .slow(2).s("piano").room(.3).delay(.125).rarely(ply(2))
+    .voicing().struct("- x - [- x] - x - -")
+  .slow(2).s("piano").room(.2).delay(.125).rarely(ply(2))
 
 SAX:note("<[- eb4@3][d4@2 c4 bb3][- ab3 c4 eb4][d4@3 [eb4 c4]]>")
-  .off(1/64,x=>x.trans(7)).room(.2).hpf(650).s("gm_soprano_sax")
+  .off(1/64,x=>x.trans(7)).room(.2).hpf(1050).s("gm_soprano_sax").delay(.25)
 
-SFX:s("crackle*32?0.4").rel(.5).lpf(2500).gain(1.5)
+SFX:s("crackle*32?0.4").rel(.5).lpf(2500).gain(1.2)
   .density("<0.2 0.5>*32".slow(2))
 
    // ⬇️ 从这里开始写你的代码
@@ -489,7 +542,7 @@ SFX:s("crackle*32?0.4").rel(.5).lpf(2500).gain(1.5)
 
 <QA q="点击查看更多提示" client:visible>
 
-- 可以用jazz采样来构成鼓组：**jazz:0 jazz:3 jazz:6 jazz:7**
+- 可以用**jazz**来构成鼓组：**jazz:0 jazz:3 jazz:6 jazz:7**
 - **shaker_small** 也是不错的配器！
 - 在 `beat` 中输入浮点数可以简单快速地使某个声音来产生小小的偏移！
 - 可以用 ``euclidRot`` 来制造充满律动的pattern！(在euclid的基础上，在括号内放置第三个参数来产生偏移)
@@ -498,3 +551,71 @@ SFX:s("crackle*32?0.4").rel(.5).lpf(2500).gain(1.5)
 
 
 </Box>
+
+#### 2.某种电子的
+<MiniRepl
+  client:visible
+  tune={`setcpm(133/4)
+
+MAINBASS:note("d3".add("<0 5 6 5>"))
+.s("saw").lpf(perlin.range(800,3000).slow(2))
+.lpa(.5).lpd(.2).lpenv(5).lpq(rand.range(5,10))
+.euclid("<3 5>",8).sometimesBy(.35,ply(2))
+.room(.1).delay(.1)
+
+SUBBASS: note("d1*16").s("supersaw").lpf(2500).lpd(.5).dec(.1)
+.gain("<.5 1>*16")
+
+   // ⬇️ 从这里开始写你的代码
+   `}
+/>
+<Box>
+**💡提示：**
+- 在4步的长度内放置4个 `bd` 会是一个很好的出发点！（这也被称为4-on-the-floor）
+- 不需要太复杂的结构
+- 音色可能比想象的更重要
+
+<QA q="点击查看更多提示" client:visible>
+
+- 低音的 `bd` 会很合适，比如 `bd:1` / `bd:4` / `bd:5`
+- 或者 `tr909` 是一款在电子音乐、舞曲中经常被用到的鼓机音色
+- 其它常见的配器还有 `hh` / `oh` / `sd`
+- 也可以尝试搭配一些音色各异的打击乐器！
+</QA>
+</Box>
+
+#### 3.???
+<MiniRepl
+  client:visible
+  tune={`setcpm(110/4)
+
+PAD:note("a4 c5 e5 c5".add("<0 [7,12]>"))
+  .s("gm_pad_warm").trans(-12)
+  .rarely(ply(2))
+  .sometimes(add(note(12)))
+  .delay(.375)
+  .room(.8)
+  .attack(.5)
+  .release("<.4 4>*4")
+.lpf(800)
+
+ARP:note("a4 [c5 e5]").arp("0 [0,2] 1 [0,2]").slow(2)
+.rarely(ply(2)).s("sine").postgain(.65)
+.lpf(tri.range(2000,5000).slow(2))
+.sus("<.3 .6 .8 .2>").decay("<.1 .2 .3 .2>")
+.lpq(3).lpenv(5).lpa(.5).delay(.3).room(.3)
+.fm(2).fmh(.02).fmdecay(.3)
+
+   // ⬇️ 从这里开始写你的代码
+   `}
+/>
+<Box>
+
+**💡提示：**
+- 有时候也不必被音乐类型（genre）束缚住，大胆尝试一些没有定式的东西也很有趣！
+- 音色可能比想象的更重要
+
+
+</Box>
+<br />
+<br />
