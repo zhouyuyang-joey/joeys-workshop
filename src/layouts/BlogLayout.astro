@@ -17,6 +17,7 @@ const { frontmatter } = Astro.props as Props;
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
+    <link rel="icon" type="image/png" href="/favicon.png" />
     <title>{frontmatter.title ? `${frontmatter.title} - Joey's Workshop` : "Joey's Workshop"}</title>
     <meta name="description" content={frontmatter.description || CONFIG.SITE.description} />
   </head>
