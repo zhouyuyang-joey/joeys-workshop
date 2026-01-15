@@ -1,0 +1,630 @@
+---
+title: Create Rhythms Through Algorithm
+layout: ../../layouts/BlogLayout.astro
+---
+
+import { MiniRepl } from '../../docs/MiniRepl';
+import Box from '../../components/Box.astro';
+import { Image } from 'astro:assets';
+import drumset from '../../img/drumset.png';
+import QA from '../../components/QA';
+
+Hi there! Welcome to Joey’s Strudel workshop! Our goal here is to help beginners quickly get the hang of Strudel basics and learn how to create your own rhythms.
+
+This content is adapted from Lucy Cheesman (huge thanks to Lucy!).
+
+Please remember: there are no fixed rules in live coding, and no such thing as "best practice." There are always several ways to achieve the same effect!
+<br />
+<br />
+# About the Worksheet
+You can write and run code in the code blocks on this page. All code blocks are editable and playable.
+<MiniRepl client:visible tune={`sound("crow")`} />
+- Press the Play button or `ctrl(option) + enter` to hear the sound.
+
+- Press the Stop button or `ctrl(command) + .` to stop the sound. (Usually, Mac users can also use `option + .` to stop, but this is not working on this worksheet for technical reasons.)
+
+- After changing the code, you need to press the Update button or `ctrl(option) + enter` again to apply your changes.
+
+- Some sounds might stutter or stay silent the very first time they play. And don't worry, this is normal!
+
+
+If you lose the original code or run into strange bugs, please try refreshing the page.
+
+**⚠️ Any code you write here will NOT be saved ⚠️**. Once you've finished learning, head over to [strudel.cc](https://strudel.cc/) to keep playing!
+<br />
+<br />
+# The Basics
+
+Here is how we write a basic pattern in Strudel:
+- `sound` is a function that tells Strudel we want to play a sound.
+- Inside the quotation marks, we write the names of the sounds we want, and they will be played as a sequence. Let's try playing the sound of a crow 🐦‍⬛.
+<MiniRepl client:visible tune={`sound("crow crow")`} />
+Congratulations! You’ve just made your first sound in live coding. Now, let’s see what happens if we put more sounds into the sequence.
+
+<MiniRepl client:visible tune={`sound("bd hh sd hh bd hh sd crow")`} />
+<Box>
+It’s okay if these sound names look strange! They are abbreviations for different parts of a drum kit. You can use the image below to understand them.
+
+<Image src={drumset} alt="drum set" width={500} />
+
+<a class="text-right text-xs" href="https://de.wikipedia.org/wiki/Schlagzeug#/media/Datei:Drum_set.svg" target="_blank">
+  Original image by Pbroks13
+</a>
+
+Common drum abbreviations:
+- bd = bass drum
+- sd = snare drum
+- rim = rimshot
+- hh = hihat
+- oh = open hihat
+- lt = low tom
+- mt = middle tom
+- ht = high tom
+- rd = ride cymbal
+- cr = crash cymbal
+
+</Box>
+
+Hmm... 🤔 what if we add even more sounds?
+
+<MiniRepl client:visible tune={`sound("bd hh sd hh bd hh sd crow bd hh sd oh bd hh crow crow")`} />
+
+You'll notice the sequence runs much faster and feels more dense. This is because Strudel has a fixed-time cycle running in the background. Any sounds in a sequence will fit into one cycle, and Strudel tries to distribute them as evenly as possible.
+
+We can use `._spiral()` to visualise the concept of a cycle 🌀.
+
+As mentioned, the speed of "bd hh sd hh" will be...
+<MiniRepl client:visible tune={`sound("bd hh sd hh")._spiral()`} />
+
+slower than `"bd hh sd hh bd bd sd hh"`！If we look at the spiral visualisation, the first line divides a cycle into 4 parts, while the second line divides it into 8.
+
+<MiniRepl client:visible tune={`sound("bd hh sd hh bd bd sd hh"._spiral())`} />
+<Box>
+We can also say this code contains **8 steps / 8 events**.
+</Box>
+
+**Simply put: the more steps in a sequence, the faster it goes!**
+
+Also, Strudel uses many abbreviations. For example, we can use `s` instead of `sound`.
+<MiniRepl client:visible tune={`s("mt rim lt oh")`} />
+
+Now, let's look at how to play multiple sounds at the same time.
+
+<MiniRepl
+  client:visible
+  tune={`$: s("bd sd rim bd")
+$: s("hh hh hh hh hh hh hh hh")`}
+/>
+
+We just need to add a `$` symbol and a colon at the start of a line to create different sounds simultaneously. As mentioned before, even though they have different numbers of sounds, both lines run within the same cycle.
+
+If you don't like the capitalist vibes of the dollar sign, you can also name your tracks to play multiple sounds. (For convenience, this worksheet will stick with the `$` symbol).
+
+<MiniRepl
+  client:visible
+  tune={`TOMS: s("mt mt lt ht")
+HATS: s("hh hh hh oh hh hh hh crow")`}
+/>
+
+How do you stop a single line of code? There are usually two ways. First, you can press `ctrl(command) + /` on a line to comment or uncomment it. Commented code is treated as plain text and won't run. You can also manually type `//` at the start.
+<MiniRepl
+  client:visible
+  tune={`$: s("bd sd rim bd")
+$: s("hh hh hh hh hh hh hh hh")
+//$: s("cp cp")
+//You can use comments to leave notes as well /ᐠ .ᆺ. ᐟ\ﾉ`}
+/>
+Another way is to put an underscore `_` before or after the `$` symbol or your custom name.
+
+<MiniRepl
+  client:visible
+  tune={`$: s("bd sd rim bd")
+$_: s("hh hh hh hh hh hh hh hh")
+_$: s("cp cp")`}
+/>
+### Exercise
+
+Now, try writing some code yourself！
+
+**Tip**：If you only have one line of sound, it doesn't matter if you use the `$` symbol or a name.
+
+<MiniRepl client:visible tune={``} />
+<Box>
+Besides the drum sounds mentioned above, you can try these!
+
+**insect  wind  jazz  metal  east  crow  casio  space  numbers**
+
+**（小提示：你可以通过双击来快速选中某个词语）**
+</Box>
+<br />
+<br />
+# Basic Syntax
+
+Strudel has a brilliant syntax (mininotation) that helps you build rich patterns quickly. 
+For example, we can use the multiplication sign `*` to speed up a sound within a sequence.
+
+<MiniRepl client:visible tune={`s("hh*4")`} />
+<MiniRepl client:visible tune={`s("hh*8")`} />
+<MiniRepl client:visible tune={`s("hh*16")`} />
+
+Similarly, we can use the division sign `/` to slow a sound down.
+
+<MiniRepl client:visible tune={`s("bd hh/2 sd hh")`} />
+<MiniRepl client:visible tune={`s("bd hh/4 sd hh")`} />
+<MiniRepl client:visible tune={`s("bd hh/16 sd hh")`} />
+
+`hh/2` means the `hh` sound only triggers once every 2 cycles. `hh/4` triggers once every `4 cycles`, and so on.
+
+Using `-` or `~` creates a rest. It takes up a "step" in the sequence but plays no sound. This is very useful for creating specific patterns!
+
+<MiniRepl client:visible tune={`s("bd - bd - bd bd bd -")`} />
+
+Additionally, we can use `:` to choose different samples. Try changing the number after the colon to switch sounds.
+
+<MiniRepl
+  client:visible
+  tune={`$: s("bd:1*4")
+$: s("hh:2*8")
+$: s("- sd:3")`}
+/>
+
+Each sound name is actually a folder containing many files. For instance, the `bd` folder has 8 files, so we have 8 different bass drums to choose from. By default, Strudel plays sample "0" because computers start counting from 0.
+
+We can also use the `n` function to choose samples.
+
+<MiniRepl
+  client:visible
+  tune={`s("bd*8").n("0 1 2 3 4 5 6 7")`}
+/>
+<Box>
+In some case, different samples sound very different, like `jazz`. Others might only have pitch differences, like `metal`.
+
+(` n ` stands for number.)
+</Box>
+(The following part might be a bit confusing, so don't worry if you don't get it for now!)
+
+Alternatively, we can create a sequence inside `n` and then specify the sound. This means we can chain functions in any order. `s` doesn't always have to be at the start.
+
+<MiniRepl
+  client:visible
+  tune={`n("0 4 4 3 5 1 0 2").s("jazz")`}
+/>
+However, note that Strudel usually gives priority to the pattern written first.
+<MiniRepl
+  client:visible
+  tune={`s("casio").n("0 2 1 2")`}
+/>
+<Box>
+**Tips:**
+
+Try changing `casio` to `casio*4` and see what happens.
+</Box>
+
+Next, we can create more variety using sub-sequences. Use square brackets `[]` to break one step of a sequence into a smaller pattern. We can use `._punchcard` to visualise this. Adding `{labels: 1}` will show the names of the sounds on the grid.
+
+<MiniRepl
+  client:visible
+  tune={`s("bd bd [lt mt ht] bd")._punchcard({labels:1})`}
+/>
+
+You’ll see that the `[lt mt ht]` part is denser and tighter, but its total length is the same as a single `bd`. This means no matter how many sounds are inside `[]`, they will all fit into the time of one step.
+
+You can even nest sub-sequences inside sub-sequences.
+
+<MiniRepl
+  client:visible
+  tune={`s("bd bd bd [hh [cp cp]]")._punchcard({labels:1})`}
+/>
+
+In this case, the length of `[hh [cp cp]]` is the same as one `bd`. Inside the brackets, `hh` has the same length as `[cp cp]`.
+
+We can also use angle brackets `<>` to create changes across cycles. Only one event inside the angle brackets triggers per cycle.
+
+<MiniRepl
+  client:visible
+  tune={`s("bd - <cp [sd cb]> bd")._punchcard({labels:1})`}
+/>
+
+Here, the first cycle plays `s("bd - cp bd")`, the second plays `s("bd - [sd cb] bd")`, and so on.
+
+Using a comma `,` creates two parallel sounds. If you write it this way, any functions added afterward will affect everything inside the brackets. For example, `.n(1)` here makes all sounds in the first line use sample number 1.
+
+<MiniRepl
+  client:visible
+  tune={`$: s("[bd cp]*4, - <sd rim*4>").n(1)
+$: s("hh*16")`}
+/>
+
+Then there is `!` , which means replicate.
+
+<MiniRepl
+  client:visible
+  tune={`s("hh!7 oh")`}
+/>
+This is identical to ⬇️
+<MiniRepl
+  client:visible
+  tune={`s("hh hh hh hh hh hh hh oh")`}
+/>
+Sometimes `!` and `*` can produce similar results, which can be confusing. Compare the two below to see the difference.
+<MiniRepl
+  client:visible
+  tune={`s("hh*7 oh")._punchcard()`}
+/>
+<MiniRepl
+  client:visible
+  tune={`s("hh!7 oh")._punchcard()`}
+/>
+As you can see, `s("hh*7 oh")` is actually a 2-step sequence where `hh*7` plays very quickly within one step. `s("hh!7 oh")` is an 8-step sequence where each `hh` takes up one full step.
+
+
+<Box>
+**Challenge:**
+
+🤔 Do you know why these two sound exactly the same?
+<MiniRepl
+  client:visible
+  tune={`s("hh!8")._punchcard()`}
+/>
+<MiniRepl
+  client:visible
+  tune={`s("hh*8")._punchcard()`}
+/>
+<br />
+</Box>
+
+Finally, we can use `?` to give a sound a 50% chance of not triggering.
+<MiniRepl
+  client:visible
+  tune={`s("hh*32?")._punchcard()`}
+/>
+Actually, `?` is the same as `?0.5`. You can change the number after the question mark to control the probability of the sound disappearing.
+<MiniRepl
+  client:visible
+  tune={`s("hh*32?0.9")._punchcard()`}
+/>
+Once you've known this basic syntax, you can create very rich patterns. It's worth noting that you can create patterns not just in `s`, but in almost any other function too!
+
+We haven't covered many functions yet, but let's try it with `n`!
+<MiniRepl
+  client:visible
+  tune={`$:s("space*4").n("0 <0 3> 0 2")
+$:n("<0 7> 3 2 [1 4] 0 5 6 4").s("<metal,<wind east>>")`}
+/>
+
+### Exercise
+Try using what you've learned to write a short rhythm 🪩.
+<MiniRepl client:visible tune={``} />
+
+<br />
+<br />
+# Building Sounds and Rhythms with Functions
+Strudel has many functions (you can find them at [strudel.cc](https://strudel.cc/)  -> small arrow on the right -> Reference). Functions can be chained together using a dot `.` .
+
+However, this can be a problem during a performance:
+- It's impossible to remember everything.
+- We want to simplify decision-making while performing.
+- Some functions require complex syntax or lots of typing.
+
+So, just pick a few of your favourites! I’ll share some functions here that focus on changing timbre and building patterns. Once you’re more experienced, you can explore many more!
+
+`gain` : Changes volume/gain. Default is 1.
+
+**⚠️ Noise Warning: Do not put a very large number ⚠️**
+<MiniRepl
+  client:visible
+  tune={`$: s("bd*4").bank("linn").gain("1 .2 1.5 .1")
+$: s("hh*16").gain("<.3 .5 1 .7>*16")
+$: s("cr").gain(1.5)`}
+/>
+<Box>
+In Strudel, there are some special writing rules:
+- "0.x" can be written as ".x". For example, `"0.3"` can be `".3"` .
+- When a parameter is just a single number, you can omit the quotes. Both `.gain(1.5)` and `.gain("1.5")` work.
+</Box>
+
+
+`euclid` : Changes a pattern to form a [Euclidean rhythm.](https://en.wikipedia.org/wiki/Euclidean_rhythm). 
+There is a shorthand: just add brackets with two parameters `(x1, x2)` after the sound. 
+`x1` is the number of hits, and `x2` is the total number of steps. 
+In the example below, the sound `jazz:5` will trigger 3 times as evenly as possible within 8 steps. 
+`euclid` allows us to create rich rhythms with very short code!
+
+<MiniRepl
+  client:visible
+  tune={`$: s("jazz*4,hh:1*16")
+$: s("jazz:5(3,8)")
+// ⬆️ This line is the same as ⬇️
+//$: s("jazz").n(5).euclid(3,8)
+// ⬆️ This line is the same as ⬇️
+//$: s("jazz - - jazz - - jazz -").n(5)`}
+/>
+<Box>
+Try changing the first number in the brackets（`x1`）:
+- Try numbers that don't divide evenly into `x2` , like 1, 5, 7
+- Try numbers that do divide evenly, like 2, 4, or 8.
+<br />
+**Tips:**
+
+- What if you use angle brackets `<>` to give the `x1` its own pattern?
+- What if you add a 3rd parameter in the brackets? (This is `euclidRot` !)
+</Box>
+
+`bank` :Chooses a sound library. Used with `s` . This usually only affects drum sounds. It's basically a shortcut to avoid typing long prefixes. In the example below, bank saves us from writing `tr909_` over and over.
+<MiniRepl
+  client:visible
+  tune={`$:s("bd*4,- sd,hh*16").bank("tr909")
+// ⬆️ This line is the same as ⬇️
+//$: s("tr909_bd*4,- tr909_sd,tr909_hh*16")`}
+/>
+<Box>
+Try changing the `bank` to other drum machines, like:
+- `ace`
+- `akailinn`
+- `d70`
+- `tr808`
+
+More options can be found at [strudel.cc](https://strudel.cc/)  -> small arrow on the right -> sounds -> drum_machines
+</Box>
+
+` fast ` : Speeds up the pattern. In the example below, the second line `s("hh -!2 hh -!2 hh -")` will run twice every cycle.
+<MiniRepl
+  client:visible
+  tune={`$:s("bd sd bd cp").bank("d70")
+$:s("hh -!2 hh -!2 hh -").bank("tr808").fast(2)`}
+/>
+<Box>
+**Tip:**
+
+What if you replace `fast` with `slow`?
+</Box>
+
+` speed `: Speeds up the sound itself. 
+Unlike `fast`, it only affects the playback speed of the sample, not the pattern. `1` is the default, less than `1` is slower/lower pitch, and greater than `1` is faster/higher pitch.
+<MiniRepl
+  client:visible
+  tune={`$:s("[- oh]*4").speed("<1 .8 1 1.2>*4")`}
+/>
+
+` hurry `: Applies both `fast` and `speed` at the same time.
+<MiniRepl
+  client:visible
+  tune={`$:s("bd*4,cb(3,8)").bank("tr707")
+$:s("sd*2").hurry("<1 2 4 8>")._punchcard()`}
+/>
+
+` struct ` : Makes a sound trigger based on a specific structure. `x` triggers the sound, 
+while rests `-` or `~` skip it. This makes your pattern very clear. 
+It can also be used with `euclid`.
+<MiniRepl
+  client:visible
+  tune={`$:s("bd*4").bank("tr909")
+$:s("jazz:5").struct("x - - x - - - x - - x - - x - x")
+$:s("cp").struct("x(3,8)")`}
+/>
+
+
+` beat ` : Creates a pattern by dividing the cycle, 
+which is great for rhythms. 
+The first parameter is which steps to trigger on, 
+and the second is how many total steps to divide the cycle into. 
+You can even use decimals to create "swing" or "groove"!
+
+<MiniRepl
+  client:visible
+  tune={`//D&B style drums
+  $:s("bd:1").beat("0,3,5",8)
+  // ⬆️ Divide cycle into 8 steps, trigger bd on steps 1, 4, and 6
+  $:s("sd:6").beat("2,6",8)
+  // ⬆️ Divide cycle into 8 steps, trigger sd on steps 3
+  $:s("hh*8").bank("d70")`}
+/>
+<Box>
+**Tip:**
+
+How about changing the `3` in the first line to `3.5` ?
+</Box>
+
+### Exercise
+Try writing a pattern using some simple functions and a few sounds!
+
+**Tip:**
+- You can use the functions/sounds I’ve used above, or others if you know them.
+- Pick the sounds you like, but don't overcomplicate the code. You don't need to use every function.
+- Don't be afraid to delete and start over!
+- Try to limit the number of sounds for now.
+- Don't forget you can use `[]` and `<>` to enrich your patterns, even inside functions!
+- Other suggested sounds: `insect` `wind` `jazz` `metal` `east` `crow` `casio` `space` `numbers`
+
+<MiniRepl
+  client:visible
+  tune={``}
+/>
+
+<br/>
+<br/>
+# Adding More Variety with Functions
+Let’s look at more functions to spice up your patterns.
+
+`rarely`/`sometimes`/`often`/`almostAlways`/`almostNever`/`sometimesBy` : Triggers a function based on probability.
+
+Specifically: 
+- `almostNever`: 10%
+- `rarely`: 25%
+- `sometimes`: 50%
+- `often`: 75%
+- `almostAlways`: 90%
+
+If these words are hard to remember, you can always use `sometimesBy`. 
+It takes two parameters: the probability (0 to 1) and the function to trigger.
+
+<MiniRepl
+  client:visible
+  tune={`$:s("<bd [- bd]!2 ->*2,<- sd>*2").n(1)
+$:s("hh!8").bank("tr808").rarely(ply(4))
+$:s("cb(3,8)").bank("tr808").sometimes(x=>x.speed(.8))
+$:s("metal").speed(1.2)
+.sometimesBy(.35,struct("x - - x - - - x - - x - - x - x"))
+._punchcard()`}
+/>
+<Box>
+The code is getting a bit complex. 
+Don't feel pressured if you don't understand it all.
+
+**提示：**
+
+- The `ply` function in the second line repeats an event. `rarely(ply(4))` means there’s a 25% chance a `hh` will repeat 4 times quickly.
+- Don't worry too much about the `x=>x` part in the third line. 
+It just tells Strudel to apply the function to that specific pattern. 
+You might notice it's missing in lines 2 and 4; the rules for when it can be omitted are a bit complex, so if not sure, just include it anyway!
+
+</Box>
+
+`every`: Triggers a function every n cycles.
+<MiniRepl
+  client:visible
+  tune={`$:s("bd").beat("0, 1, 3, 5, 7, 11, 13", 16).slow(2)
+$:s("- sd").every(3,ply(2))
+$:s("hh*16?").every(6,x=>x.speed(1.2))`}
+/>
+
+`jux`: Applies a function only to the right channel, creating a cool stereo effect.
+<MiniRepl
+  client:visible
+  tune={`$:s("hh*4,<- sd:1>*2,bd(5,8)").n(4)
+$: sound("metal(3,8)").n("<0 5 6>*3")
+.hurry("<1 2>/2")
+.jux(rev)`}
+/>
+<Box>
+The `rev` makes a pattern run in reverse.
+</Box>
+
+You've learned a lot of functions! I’ve set up a challenge for you, but first, one more important concept: `cpm`.
+
+Yes, cpm, not BPM! If you aren't familiar, BPM (Beats Per Minute) measures music speed.
+
+`cpm` stands for **Cycles Per Minute**. Since Strudel is cycle-based, this concept makes more sense here.
+
+We use `setcpm` to change the overall speed. Simply put: desired BPM divided by 4 = CPM value.
+
+By the way, Strudel’s default `cpm` is `120/4` (which is 120 BPM).
+<MiniRepl
+  client:visible
+  tune={`// ⬇️ 140bpm
+  setcpm(140/4)
+  // ⬆️ Try changing the cpm to feel the speed difference!
+  $:s("bd:4*4,[- sd:2]*2,hh:2*16")`}
+/>
+
+### Challenge
+Now, try to write a groovy drum part for one of the melodies below! 
+I’ve provided three different styles—pick the one you like best.
+
+#### 1.lofi/jazz-ish
+<MiniRepl
+  client:visible
+  tune={`setcpm(95/4)
+
+BASS:note("<[c2 - c2 -][- b1 - b1][f2 - f2 -][- g2 - c2]>")
+  .speed("<0.9 1.1>").s("gm_acoustic_bass").lpf(1200)
+
+PIANO:chord("Cm7 Bb7 Fm7 G7")
+    .voicing().struct("- x - [- x] - x - -")
+  .slow(2).s("piano").room(.2).delay(.125).rarely(ply(2))
+
+SAX:note("<[- eb4@3][d4@2 c4 bb3][- ab3 c4 eb4][d4@3 [eb4 c4]]>")
+  .off(1/64,x=>x.trans(7)).room(.2).hpf(1050).s("gm_soprano_sax").delay(.25)
+
+SFX:s("crackle*32?0.4").rel(.5).lpf(2500).gain(1.2)
+  .density("<0.2 0.5>*32".slow(2))
+
+   // ⬇️ Write your code here
+   `}
+/>
+<Box>
+**Tips**
+- Set your drum sequence length to a multiple of 2 (like 2, 4, 8, 16) to match the rhythm.
+- Keep the structure simple.
+- Give sounds a bit of "offset" — triggering slightly early or late can create a great groove.
+- The choice of sound might be more important than you think!
+
+<QA q="Click for more tips" client:visible>
+
+- Maybe try jazz samples: `jazz:0`, `jazz:3`, `jazz:6`, `jazz:7`.
+- **shaker_small** is also a great fit!
+- Using decimals in `beat` is a quick way to create small offbeat effect and swing!
+- Use `euclidRot` to create groovy patterns (it's the 3rd parameter in the brackets after euclid).
+
+</QA>
+
+
+</Box>
+
+#### 2.Electronic?
+<MiniRepl
+  client:visible
+  tune={`setcpm(133/4)
+
+MAINBASS:note("d3".add("<0 5 6 5>"))
+.s("saw").lpf(perlin.range(800,3000).slow(2))
+.lpa(.5).lpd(.2).lpenv(5).lpq(rand.range(5,10))
+.euclid("<3 5>",8).sometimesBy(.35,ply(2))
+.room(.1).delay(.1)
+
+SUBBASS: note("d2*16").s("supersaw").lpf(2500).lpd(.5).dec(.1)
+.gain("<.5 1>*16")
+
+   // ⬇️ Write your code here
+   `}
+/>
+<Box>
+**Tips**
+- Placing four `bd` in a 4-step sequence is a great starting point! (Known as "4-on-the-floor").
+- You don't need a complex structure.
+- The choice of sound might be more important than you think!
+
+<QA q="Click for more tips" client:visible>
+
+- Deep `bd` sounds work well, like `bd:1` / `bd:4` / `bd:5` .
+- `tr909` is a classic drum machine used in electronic and dance music.
+- Other common parts are `hh` / `oh` / `sd` / `cp`
+- Try adding different kinds of percussion!
+</QA>
+</Box>
+
+#### 3.???
+<MiniRepl
+  client:visible
+  tune={`setcpm(110/4)
+
+PAD:note("a4 c5 e5 c5".add("<0 [7,12]>"))
+  .s("gm_pad_warm").trans(-12)
+  .rarely(ply(2))
+  .sometimes(add(note(12)))
+  .delay(.375)
+  .room(.8)
+  .attack(.5)
+  .release("<.4 4>*4")
+.lpf(800)
+
+ARP:note("a4 [c5 e5]").arp("0 [0,2] 1 [0,2]").slow(2)
+.rarely(ply(2)).s("sine").postgain(.65)
+.lpf(tri.range(2000,5000).slow(2))
+.sus("<.3 .6 .8 .2>").decay("<.1 .2 .3 .2>")
+.lpq(3).lpenv(5).lpa(.5).delay(.3).room(.3)
+.fm(2).fmh(.02).fmdecay(.3)
+
+   // ⬇️ Write your code here
+   `}
+/>
+<Box>
+
+**Tips:**
+- Sometimes you don't need to be restricted by "genre." It’s fun to experiment with things that have no set rules!
+- Focus on how the sounds feel together.
+
+
+</Box>
+<br />
+<br />
