@@ -38,7 +38,7 @@ import QA from '../../components/QA';
 # 基础知识
 
 以下是一个我们在 strudel 中编写基本pattern的方法。
-- 其中sound是一个功能，告诉strudel我们想要播放声音
+- 其中`sound`是一个功能，告诉strudel我们想要播放声音
 - 在引号中，我们可以写下想要播放的声音。这些声音会以序列的形式被播放。在这里，我们尝试播放乌鸦的叫声 🐦‍⬛
 <MiniRepl client:visible tune={`sound("crow crow")`} />
 恭喜！你已经用live coding的方式制造出了第一个动静。接下来让我试试看，如果在序列里放入更多的声音会发生什么。
@@ -328,6 +328,7 @@ $: s("cr").gain(1.5)`}
 - 当传入的参数为仅仅一个数字时，可以省略引号。比如 `.gain(1.5)` 和 `.gain("1.5")` 都是可以的
 </Box>
 
+
 `euclid` :改变pattern，形成[欧几里得节奏](https://en.wikipedia.org/wiki/Euclidean_rhythm)。这个功能有快捷写法，只需要在声音后面添加括号和两个参数 ` (x1,x2) ` 就可以使用。其中 `x1` 代表触发声音的步数， `x2` 的代表总共的步数。
 在下列代码的案例中，代表着jazz:5这个声音会在8步的长度内尽量均匀地触发3次。使用`euclid` 可以让我们用非常简短的代码就创造非常丰富的节奏！
 
@@ -563,7 +564,7 @@ MAINBASS:note("d3".add("<0 5 6 5>"))
 .euclid("<3 5>",8).sometimesBy(.35,ply(2))
 .room(.1).delay(.1)
 
-SUBBASS: note("d1*16").s("supersaw").lpf(2500).lpd(.5).dec(.1)
+SUBBASS: note("d2*16").s("supersaw").lpf(2500).lpd(.5).dec(.1)
 .gain("<.5 1>*16")
 
    // ⬇️ 从这里开始写你的代码
