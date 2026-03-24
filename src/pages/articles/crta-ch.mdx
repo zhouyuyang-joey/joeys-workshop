@@ -10,7 +10,7 @@ import drumset from '../../img/drumset.png';
 import QA from '../../components/QA';
 
 
-嗨，欢迎来到Joey的strudel workshop！在这里，我们的目标是快速地让初学者们掌握strudel的基础以及创造律动的方法。
+嗨，欢迎来到Joey的strudel workshop！在这里，我的目标是快速地让初学者们掌握strudel的基础以及创造律动的方法。
 内容改编自Lucy Cheesman，感谢Lucy!
 
 请记住live coding无定式，也没有所谓的“最佳实践”。构建同一个效果往往有数种不同的方法！
@@ -71,14 +71,14 @@ import QA from '../../components/QA';
 
 <MiniRepl client:visible tune={`sound("bd hh sd hh bd hh sd crow bd hh sd oh bd hh crow crow")`} />
 
-我们会发现序列的运行变得更快、更密集了。这是因为 strudel 在后台有一个固定时间的“循环”。序列中的任何声音都将在一个周期内运行，strudel 也会尝试均匀地分布这些声音。
+我们会发现序列的运行变得更快、更密集了。这是因为 strudel 在后台有一个固定时间的“循环”。序列中的任何声音都将在一个cycle内运行，strudel也会尝试均匀地分布这些声音。
 
 我们可以用 `._spiral()` 来可视化循环的概念 🌀
 
 如上所述，“咚次哒次”的速度会...
 <MiniRepl client:visible tune={`sound("bd hh sd hh")._spiral()`} />
 
-比“咚次哒次咚咚哒次”来得慢！如果我们观察可视化的spiral图形会发现，在上面这行代码中，一个循环被平均分成了4份，下面这行代码则是8份。
+比“咚次哒次咚咚哒次”来得慢！如果我们观察可视化的spiral图形会发现，在上面这行代码中，一个cycle被平均分成了4份，下面这行代码则是8份。
 
 <MiniRepl client:visible tune={`sound("bd hh sd hh bd bd sd hh"._spiral())`} />
 <Box>
@@ -104,8 +104,8 @@ $: s("hh hh hh hh hh hh hh hh")`}
 
 <MiniRepl
   client:visible
-  tune={`TOMS: s("mt mt lt ht")
-HATS: s("hh hh hh oh hh hh hh crow")`}
+  tune={`TOMS: s("lt mt mt ht")
+HATS: s("bd hh hh hh oh hh hh hh")`}
 />
 
 如何单独停止某一行代码呢？通常有两种方法。
@@ -132,6 +132,7 @@ _$: s("cp cp")`}
 
 **提示**：只有一行发出声音的代码时，是否使用 ` $ ` 符号或设立名称都无所谓。
 
+**另一个提示**：使用s函数发出声音时别忘了括号和引号！
 <MiniRepl client:visible tune={``} />
 <Box>
 除了上面提到的鼓组的声音，你也可以尝试以下声音！
@@ -151,14 +152,6 @@ strudel有一套的非常棒的语法（mininotation），它可以帮你快速�
 <MiniRepl client:visible tune={`s("hh*8")`} />
 <MiniRepl client:visible tune={`s("hh*16")`} />
 
-对应地，我们也可以用除号 ` / ` 来减慢声音在序列中播放的速度。
-
-<MiniRepl client:visible tune={`s("bd hh/2 sd hh")`} />
-<MiniRepl client:visible tune={`s("bd hh/4 sd hh")`} />
-<MiniRepl client:visible tune={`s("bd hh/16 sd hh")`} />
-
-`hh/2` 代表着每2个循环只触发一次 `hh` 的声音。`hh/4` 则是每4个循环只触发一次，`hh/16`则是16个循环。
-
 使用 ` - ` 或者 ` ~ ` 则可以创建一个休止符。它会在序列中占据一步的位置，但实际上又不播放任何声音。这在创建特定pattern时很有帮助！
 
 <MiniRepl client:visible tune={`s("bd - bd - bd bd bd -")`} />
@@ -172,8 +165,21 @@ $: s("hh:2*8")
 $: s("- sd:3")`}
 />
 
-每个声音其实都是一个文件夹，文件夹里可以存放许多个文件。比如 ` bd ` 这个文件夹里实际上有8个文件，因此我们总共有8种不同的的bd可以使用。在默认情况下，strudel会播放第“0”个采样，这是因为在计算机语言中是从0开始计数的。
-
+每个采样的声音其实都是一个文件夹，文件夹里可以存放许多个文件。比如 ` bd ` 这个文件夹里实际上有8个文件，因此我们总共有8种不同的的bd可以使用。在默认情况下，strudel会播放第“0”个采样，这是因为在计算机语言中是从0开始计数的。
+<box>
+```
+└─ samples
+   ├─ bd <-- 例如bd其实是一个文件夹，里面可以含有许多个音频文件
+   │  ├─ bd0.wav <-- 在默认情况下，会播放第0个采样
+   │  ├─ bd1.wav
+   │  ├─ ......
+   │  └─ bd7.wav
+   └─ casio <-- 有些采样比较丰富，有些采样则比较少，比如casio只有3种
+      ├─ casio0.wav
+      ├─ casio1.wav
+      └─ casio2.wav
+```
+</box>
 除了冒号，我们也可以用另外一个功能 ` n `来选择不同的采样。
 
 <MiniRepl
@@ -327,6 +333,22 @@ $: s("cr").gain(1.5)`}
 - "0.x" 可以一律写成 ".x"，比如 `"0.3"` 也可以写作 `".3"`
 - 当传入的参数为仅仅一个数字时，可以省略引号。比如 `.gain(1.5)` 和 `.gain("1.5")` 都是可以的
 </Box>
+
+`room` :为声音添加混响。合理的数值范围在0-1之间。
+
+<MiniRepl
+  client:visible
+  tune={`$: s("bd(3,8),- sd").bank("d70")
+$: s("<-!3 cr>").room(.6).bank("d70")`}
+/>
+
+`delay` :为声音添加延迟。合理的数值范围在0-1之间。
+
+<MiniRepl
+  client:visible
+  tune={`$: s("jazz:2(5,8)")
+$: s("jazz:4(3,8)").delay(.35)`}
+/>
 
 
 `euclid` :改变pattern，形成[欧几里得节奏](https://en.wikipedia.org/wiki/Euclidean_rhythm)。这个功能有快捷写法，只需要在声音后面添加括号和两个参数 ` (x1,x2) ` 就可以使用。其中 `x1` 代表触发声音的步数， `x2` 的代表总共的步数。
@@ -511,9 +533,44 @@ strudel的默认cpm值为 `120/4`，也就是120bpm。
 />
 
 ### 挑战
-接下来，请你尝试以下的旋律配一段充满律动的鼓组吧！我提供了几种截然不同的风格，选择你更喜欢的其中之一来完成就好。
+接下来，请你尝试以下的旋律配一段充满律动的鼓组吧！
+我提供了几种截然不同的风格，选择你更喜欢的一个来完成就好。
 
-#### 1.某种lofi/jazz的
+**提示**: 以下的旋律都是四拍的，因此将鼓组的保持在1，2，4，8，16...个step会比较合适！
+
+#### 1.某种电子的
+<MiniRepl
+  client:visible
+  tune={`setcpm(133/4)
+
+MAINBASS:note("d3".add("<0 5 6 5>"))
+.s("saw").lpf(perlin.range(800,3000).slow(2))
+.lpa(.5).lpd(.2).lpenv(5).lpq(rand.range(5,10))
+.euclid("<3 5>",8).sometimesBy(.35,ply(2))
+.room(.1).delay(.1)
+
+SUBBASS: note("d2*16").s("supersaw").lpf(2500).lpd(.5).dec(.1)
+.gain("<.5 1>*16")
+
+   // ⬇️ 从这里开始写你的代码
+   `}
+/>
+<Box>
+**💡提示：**
+- 在一个cycle的长度内放置4个 `bd` 会是一个很好的出发点！（这也被称为4-on-the-floor）
+- 不需要太复杂的结构
+- 音色可能比想象的更重要
+
+<QA q="点击查看更多提示" client:visible>
+
+- 低音的 `bd` 会很合适，比如 `bd:1` / `bd:4` / `bd:5`
+- 或者 `tr909` 是一款在电子音乐、舞曲中经常被用到的鼓机音色
+- 其它常见的配器还有 `hh` / `oh` / `sd`
+- 也可以尝试搭配一些音色各异的打击乐器！
+</QA>
+</Box>
+
+#### 2.某种lofi/jazz的
 <MiniRepl
   client:visible
   tune={`setcpm(95/4)
@@ -553,37 +610,6 @@ SFX:s("crackle*32?0.4").rel(.5).lpf(2500).gain(1.2)
 
 </Box>
 
-#### 2.某种电子的
-<MiniRepl
-  client:visible
-  tune={`setcpm(133/4)
-
-MAINBASS:note("d3".add("<0 5 6 5>"))
-.s("saw").lpf(perlin.range(800,3000).slow(2))
-.lpa(.5).lpd(.2).lpenv(5).lpq(rand.range(5,10))
-.euclid("<3 5>",8).sometimesBy(.35,ply(2))
-.room(.1).delay(.1)
-
-SUBBASS: note("d2*16").s("supersaw").lpf(2500).lpd(.5).dec(.1)
-.gain("<.5 1>*16")
-
-   // ⬇️ 从这里开始写你的代码
-   `}
-/>
-<Box>
-**💡提示：**
-- 在4步的长度内放置4个 `bd` 会是一个很好的出发点！（这也被称为4-on-the-floor）
-- 不需要太复杂的结构
-- 音色可能比想象的更重要
-
-<QA q="点击查看更多提示" client:visible>
-
-- 低音的 `bd` 会很合适，比如 `bd:1` / `bd:4` / `bd:5`
-- 或者 `tr909` 是一款在电子音乐、舞曲中经常被用到的鼓机音色
-- 其它常见的配器还有 `hh` / `oh` / `sd`
-- 也可以尝试搭配一些音色各异的打击乐器！
-</QA>
-</Box>
 
 #### 3.???
 <MiniRepl
