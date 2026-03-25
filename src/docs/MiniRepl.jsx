@@ -7,6 +7,7 @@ import { getAudioContext, webaudioOutput, initAudioOnFirstClick } from '@strudel
 import { StrudelMirror } from '@strudel/codemirror';
 import { prebake } from '../repl/prebake.mjs';
 import { loadModules, setVersionDefaultsFrom } from '../repl/util.mjs';
+import Claviature from '../components/Claviature';
 
 let prebaked, modulesLoading, audioReady;
 if (typeof window !== 'undefined') {
@@ -23,6 +24,8 @@ export function MiniRepl({
   onTrigger,
   punchcard,
   punchcardLabels = true,
+  claviature,
+  claviatureLabels,
   maxHeight,
   autodraw,
   drawTime,
@@ -32,8 +35,12 @@ export function MiniRepl({
   const id = useMemo(() => s4(), []);
   const shouldShowCanvas = !!punchcard;
   const canvasId = shouldShowCanvas ? useMemo(() => `canvas-${id}`, [id]) : null;
-  autodraw = !!punchcard || !!autodraw;
+  autodraw = !!punchcard || !!claviature || !!autodraw;
   drawTime = (drawTime ?? punchcard) ? [0, 4] : [-2, 2];
+  if (claviature) {
+    drawTime = [0, 0];
+  }
+  const [activeNotes, setActiveNotes] = useState([]);
 
   const init = useCallback(({ code, autodraw }) => {
     const getDrawContextFn = () => {
@@ -65,6 +72,15 @@ export function MiniRepl({
           const drawCtx = getDrawContextFn();
           const punchcardPainter = getPunchcardPainter({ labels: !!punchcardLabels, ctx: drawCtx });
           pat = pat.onPaint(punchcardPainter);
+        }
+        if (claviature) {
+          pat = pat.onPaint((ctx, time, haps, drawTime) => {
+            const active = haps
+              .map((hap) => hap.value.note)
+              .filter(Boolean)
+              .map((n) => (typeof n === 'string' ? noteToMidi(n) : n));
+            setActiveNotes(active);
+          });
         }
         return pat;
       },
@@ -192,6 +208,16 @@ export function MiniRepl({
             }
           }}
         ></canvas>
+      )}
+      {claviature && (
+        <Claviature
+          options={{
+            range: ['C2', 'C6'],
+            scaleY: 0.75,
+            colorize: [{ keys: activeNotes, color: 'steelblue' }],
+            labels: claviatureLabels || {},
+          }}
+        />
       )}
     </div>
   );

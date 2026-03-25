@@ -4,8 +4,16 @@ export const SITE = {
   defaultLanguage: 'en',
 };
 
+export const OPEN_GRAPH = {
+  image: {
+    src: '/favicon.png',
+    alt: "Joey's Workshop Logo",
+  },
+};
+
 export type Frontmatter = {
   title: string;
   description?: string;
   layout: string;
+  image?: { src: string; alt: string };
 };

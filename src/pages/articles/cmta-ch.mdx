@@ -1,8 +1,355 @@
 ---
-title: Patterns and Rhythm
+title: 算法旋律
 layout: ../../layouts/BlogLayout.astro
 ---
 
 import { MiniRepl } from '../../docs/MiniRepl';
 import Box from '../../components/Box.astro';
+import { midi2note } from '@strudel/core';
+import { Image } from 'astro:assets';
+import QA from '../../components/QA';
+import numbers_notes from '../../img/n-midi.jpg';
 
+嗨，欢迎来到Joey的strudel workshop！在这里，我的目标是快速地让初学者们掌握strudel的旋律创作！
+我并没有专业地学习过音乐或者乐理知识，因此这里的内容更多是基于我的经验与理解。
+
+### 请完成 *[算法律动](/articles/crta-ch)* 后再来学习本worksheet！
+<br />
+<br />
+# 基础知识
+在strudel中最直接地写作旋律的方法是使用`note`。在note功能内写入对应字母即可。
+
+<MiniRepl
+  client:visible
+  tune={`note("c e g <a b>").sound("piano")`}
+  claviature
+  claviatureLabels={Object.fromEntries(['c3', 'd3', 'e3', 'f3', 'g3', 'a3', 'b3'].map((n) => [n, n.split('')[0]]))}
+/>
+
+“do re mi fa sol la si do”也就是：
+<MiniRepl
+  client:visible
+  tune={`$:note("<c d e f g a b c4>*4").s("piano")`}
+  claviature
+  claviatureLabels={Object.fromEntries(['c3', 'd3', 'e3', 'f3', 'g3', 'a3', 'b3','c4'].map((n) => [n, n.split('')[0]]))}
+/>
+
+其中，我们可以在字母后面添加数字来指定具体的八度。如果没有特别指定则默认为“3”。（也就是说"c"和"c3"是一样的！）
+<MiniRepl
+  client:visible
+  tune={`$:note("c c3 a3 a e3 e f3 f").s("piano")`}
+  claviature
+  claviatureLabels={Object.fromEntries(['c3', 'd3', 'e3', 'f3', 'g3', 'a3', 'b3','c4'].map((n) => [n, n.split('')[0]]))}
+/>
+
+我们可以用`b`或者`#`来弹奏黑键！
+
+<MiniRepl
+  client:visible
+  tune={`note("db eb gb <ab ab2> bb").sound("piano")`}
+  claviature
+  claviatureLabels={Object.fromEntries(
+    ['g2','a2','b2','c3','d3','e3','f3','g3','a3','b3','ab2','bb2','db3', 'eb3', 'gb3', 'ab3', 'bb3'].map((n) => [n, n.split('').slice(0, 2).join('')]),
+  )}
+/>
+
+<MiniRepl
+  client:visible
+  tune={`note("c# d# <f# f#4> g# a#").sound("piano")`}
+  claviature
+  claviatureLabels={Object.fromEntries(
+    ['c3', 'd3', 'e3', 'f3', 'g3', 'a3', 'b3','c4','d4','e4', 'f4', 'g4','c#3', 'd#3', 'f#3', 'g#3', 'a#3','c#4','d#4','f#4'].map((n) => [n, n.split('').slice(0, 2).join('')]),
+  )}
+/>
+<Box>
+ 在e和f之间、b和c之间没有半音，也就是说没有`e#`/`fb`以及`b#`/`cb`这样的音。
+</Box>
+
+与此同时，我们也可以用midi数字来演奏音符:
+<MiniRepl
+  client:visible
+  tune={`$:note("<48 50 52 53 55 57 59 60>*4").sound("piano")`}
+  claviature
+  claviatureLabels={Object.fromEntries(
+    Array(49)
+      .fill()
+      .map((_, i) => [midi2note(i + 36), i + 36]),
+  )}
+/>
+
+
+<Box>
+详细来说，midi数字与音符的对应关系是这样的：
+
+<Image src={numbers_notes} alt="numbers to notes" width={500} />
+
+</Box>
+
+
+数字越小，声音越低，数字越大，声音越高。
+
+对于没有音乐基础的人来说，使用数字可能比字母更合理。
+<br />
+<br />
+
+# 改变声音
+
+跟节奏一样，我们可以用`s`或者`sound`来指定使用的声音。
+<MiniRepl
+  client:visible
+  tune={`$:note("50 53 57 58 57 50").s("piano")`}
+  claviature
+  claviatureLabels={Object.fromEntries(
+    Array(49)
+      .fill()
+      .map((_, i) => [midi2note(i + 36), i + 36]),
+  )}
+/>
+<Box>
+来试试不同的声音吧！
+- saw
+- supersaw
+- triangle
+- square
+- folkharp
+- clavisynth
+- gm_voice_oohs
+- gm_synth_bass_1
+- 如果使用一个非旋律的声音（`bd`, `sd`, `crow`...）的话...?
+- 如果删掉`s`，完全不指定声音的话...?
+</Box>
+
+别忘了所有的东西都可以是pattern！包括音色！
+
+比如我们可以让声音在循环内切换：
+<MiniRepl
+  client:visible
+  tune={`$:note("a3 c4 - d4 - e4 [d4 c4] -").s("piano gm_electric_guitar_muted")`}
+/>
+
+也可以让声音在循环之间切换：
+<MiniRepl
+  client:visible
+  tune={`$:note("a3 c4 - d4 - e4 [d4 c4] -").s("<piano gm_electric_guitar_muted>")`}
+/>
+
+也可以用 `,` 来叠加一层声音：
+<MiniRepl
+  client:visible
+  tune={`$:note("a3 c4 - d4 - e4 [d4 c4] -").s("piano, gm_electric_guitar_muted")`}
+/>
+<br />
+<br />
+
+# 加快或减慢
+如果想要加快整个乐句的话，可以用 `[]` 把乐句包裹起来，然后用 `*` 来加速。
+<MiniRepl
+  client:visible
+  tune={`$:note("[a3@2 c4 d4 e4@3 [d4 c4]]*2").s("gm_soprano_sax")._punchcard()`}
+/>
+
+同理，如果想要放慢整个乐句的话则可以用 `/` 。
+<MiniRepl
+  client:visible
+  tune={`$:note("[a3@2 c4 d4 e4@3 [d4 c4]]/2").s("gm_soprano_sax")._punchcard()`}
+/>
+
+另外一个常见的写法是，在 `<>` 内置入不同的乐句 `[]` 然后再做其他调整。
+<MiniRepl
+  client:visible
+  tune={`$:note("<[a4 c4]*4 [e4 c4] [c4 a4]*4 [c4*2 e4*2]/2>").s("gm_soprano_sax")._punchcard()`}
+/>
+<br />
+<br />
+# 延长与重复
+我们可以用 `@` 符号来把音符延长。
+<MiniRepl
+  client:visible
+  tune={`$:note("a3@2 c4 d4 e4@3 [d4 c4]").s("gm_soprano_sax")._punchcard()`}
+/>
+<Box>
+在这里，我把 `a3` 和 `e4` 分别延长为其原来的2倍和3倍。这使得这个pattern变成了8步。
+</Box>
+
+另外，可以用 `!` 来重复音符。
+<MiniRepl
+  client:visible
+  tune={`$:note("a3!2 c4 d4 e4!3 [d4 c4]").s("gm_soprano_sax")._punchcard()`}
+/>
+<Box>
+- 感受到了 `!` 和 `@` 之间的区别了吗？
+- 还记得 `!` 和 `*` 之间的不同吗？
+</Box>
+
+<br />
+<br />
+
+# 音阶
+另外一种用数字演奏旋律的方法是使用 `n` 和 `scale` 功能！
+
+所谓的音阶指的是一组人为规定的特定的音高组合。比如我们上面提及到的“do re mi fa sol la si do”就是自然大调（major）。
+从 `c3` 开始的自然大调在strudel中可以表达为：
+<MiniRepl
+  client:visible
+  tune={`$:n("<0 1 2 3 4 5 6 7>*4").scale("c:major").s("piano")
+  // ⬆️ 这两者是一样的 ⬇️
+  //$:note("<c d e f g a b c4>*4").s("piano")`}
+  claviature
+  claviatureLabels={Object.fromEntries(['c3', 'd3', 'e3', 'f3', 'g3', 'a3', 'b3','c4'].map((n) => [n, n.split('')[0]]))}
+/>
+<Box>
+- 同样地，默认情况下 `c:major` 就是 `c3:major` 
+- 在同一个音阶里，不同的数字组合听起来应该都不错，试试更改数字的排列方式或者丰富这个序列！
+</Box>
+
+不同的音阶会带来截然不同的感受! 
+<MiniRepl
+  client:visible
+  tune={`$:n("<0 4 1 <2 7> [5 7]>*8").scale("A2:minor:pentatonic").s("piano")`}
+   claviature
+  claviatureLabels={Object.fromEntries(
+    Array(49)
+      .fill()
+      .map((_, i) => [midi2note(i + 36), i + 36]),
+  )}
+/>
+
+
+<Box>
+试试不同的音阶吧！
+- a2:minor
+- d:dorian
+- g:mixolydian
+- a2:minor:pentatonic
+- g:phrygian
+- e:blues
+</Box>
+
+<br />
+<br />
+# 用简单的算数创作丰富的旋律
+
+既然可以用数字来表达音符，那么理所应当的可以使用算数符号来改变数字！让我们试着用 `add` 来丰富这个旋律！
+<MiniRepl
+  client:visible
+  tune={`$:note("[50 53 57 58 57 50]*2".add("<0 4 -4 3>")).s("supersaw")`}
+/>
+
+同样的方法也可以用在使用音阶的情况。
+<MiniRepl
+  client:visible
+  tune={`$:n("<0 4 0 9 0 1>*16".add("<0 4 0 [9 1]*4>")).scale("g:minor").s("supersaw")`}
+/>
+
+但需要注意的是，在上列写法中需要将 `add` 直接写在括号内。如果需要将 `add` 写在括号外的话则需要补充 `note`。但这两者的效果是完全不同的！
+<MiniRepl
+  client:visible
+  tune={`$:n("<<0 7> 2 [1 3] 2 4 5 1 4>*8"
+    // .add("<0 12>")
+   ).scale("a:minor").s("piano")
+  .add(("<0 12>"))`}
+/>
+<Box>
+- 当 `add` 在括号内时，它影响的是音阶内的顺序关系。
+- 当 `add` 在括号外时，它影响的是midi数字的值。
+</Box>
+相应的，也可以使用其它运算符比如 `sub`, `mul` , `div` 等等。
+<MiniRepl
+  client:visible
+  tune={`$:n("<0 4 1 2>*2").scale("g:phrygian").s("piano")
+.off(.125,x=>x.add(note(12)))
+  .off(.25,x=>x.sub(note("7")))
+  .clip(2).delay(.125).room(.125)
+  ._punchcard()`}
+/>
+<MiniRepl
+  client:visible
+  tune={`$:n("0 1 0 -1").scale("d:minor").s("piano")
+.superimpose(x=>x.mul(note(2)))
+  ._punchcard()`}
+/>
+<MiniRepl
+  client:visible
+  tune={`$:n("<14!3 16>".div("<1 2>")).scale("d:minor").s("piano")
+._punchcard()`}
+/>
+<br />
+<br />
+# 用随机数来创造旋律
+在掌握了以上知识后，我们可以尝试用随机数来创作旋律。
+非常实用的功能是 `irand(n)`， 它会生成 `0` - `n-1` 范围内的随机数。
+<MiniRepl
+  client:visible
+  tune={`stack(
+  n("0*16?".add(irand(12))).scale("f:minor")
+.s("gm_electric_guitar_clean")
+.delay(.125).room(.2),
+
+  n("0".add(irand("2|-2"))).scale("f2:minor")
+.s("gm_synth_bass_2").delay(.1)
+.euclidLegato("<5 9>/2",16).gain(.85)
+)._punchcard()`}
+/>
+
+但这个随机生成的pattern会不受控制地变化。有的时候我们希望我们的旋律乐句可以不断循环，对吧？大概...?
+这种时候我们可以用 `ribbon` 功能。其简写为 `rib` 。如果把整个时间跨度想象成一条丝带，这个功能可以让你剪下其中一段并循环使用。
+它需要两个参数，第一个是这条丝带的起始点，第二个则是这条丝带的长度。
+
+<MiniRepl
+  client:visible
+  tune={`stack(
+n("0*16?".add(irand(12))).scale("f:minor")
+.s("gm_electric_guitar_clean")
+.delay(.125).room(.2)
+  .rib(2,2),
+
+n("0".add(irand("2|-2"))).scale("f2:minor")
+.s("gm_synth_bass_2").delay(.1)
+.euclidLegato("<5 9>/2",16).gain(.85)
+  .rib(132,4)
+)._punchcard()`}
+/>
+<Box>
+- 更改`rib`的第一个参数来获取一段新的旋律
+- 更改`rib`的第二个参数来获取更长的loop
+</Box>
+
+关于随机数，还有许多有趣的玩法，但现在暂时让我们专注于旋律 :)
+
+# 和弦
+和弦通常指的是同时弹奏的多个音符。
+<MiniRepl
+  client:visible
+  tune={`$:note("<[f4,a4,c5] [e4,g4,b4] [d4,f4,a4] [c4,e4,g4]>").s("piano")`}
+/>
+我们也可以用midi数字来表示。
+<MiniRepl
+  client:visible
+  tune={`$:note("<[65,69,72] [64,67,71] [62,65,69] [60,64,67]>").s("piano")`}
+/>
+<Box>
+当我们使用midi数字表示时可以很容易的发现其中的数学关系。
+
+在 `[65,69,72]` 和 `[60,64,67]` 中，数字与最低音的音程间隔为：
+- 0,4,7 (这也就是大和弦)
+
+在 `[64,67,71]` 和 `[62,65,69]` 中，数字与最低音的音程间隔为：
+
+- 0,3,7 （这也就是小和弦）
+</Box>
+
+
+因此，我们也可以把和弦写成这样：
+<MiniRepl
+  client:visible
+  tune={`$:note("<[0,4,7] [0,3,7]!2 [0,4,7]>".add("<65 64 62 60>")).s("piano")`}
+/>
+
+此外，也可以用和弦符号进行演奏。每个符号都包含和弦的根音root ，还可以选择性地加上一个 `m` 来表示它是小和弦（只有根音则表示它是大和弦）。
+<MiniRepl
+  client:visible
+  tune={`
+$:chord("<Gm7*8 F*6>").voicing()`}
+/>
+
+写到这里我觉得决定停下。和弦符号令我脑袋很痛。如果你好奇的话，更多关于和弦的内容请看[这里](https://warm.strudel.cc/understand/voicings/)。

@@ -1,6 +1,9 @@
 ---
 import * as CONFIG from '../config';
 import '../styles/global.css';
+import '../docs/docs.css';
+import HeadCommon from '../components/HeadCommon.astro';
+import HeadSEO from '../components/HeadSEO.astro';
 import { Image } from 'astro:assets';
 import joeysworkshop from '../img/joeysworkshop.png';
 
@@ -9,11 +12,14 @@ type Props = {
 };
 
 const { frontmatter } = Astro.props as Props;
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 ---
 
 <!DOCTYPE html>
 <html lang="en" class="initial dark">
   <head>
+    <HeadCommon />
+    <HeadSEO frontmatter={frontmatter} canonicalUrl={canonicalURL} />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
@@ -22,7 +28,7 @@ const { frontmatter } = Astro.props as Props;
     <meta name="description" content={frontmatter.description || CONFIG.SITE.description} />
   </head>
 
-  <body class="min-h-screen bg-background text-gray-50">
+  <body class="h-app-height m-0 text-gray-50 bg-background">
     <header class="border-b border-lineHighlight">
       <nav class="max-w-6xl mx-auto px-6 py-6 site-header">
         <h1 class="text-2xl font-bold text-primary">
