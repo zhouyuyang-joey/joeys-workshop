@@ -1,0 +1,1 @@
+import{aD as t,aE as n}from"./index.DAe4gFtB.js";t(n.get().theme);const e=()=>{document.documentElement.style.setProperty("--app-height",`${window.innerHeight-1}px`)};typeof window<"u"&&(window.addEventListener("resize",e),e());

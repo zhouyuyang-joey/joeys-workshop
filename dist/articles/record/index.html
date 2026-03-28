@@ -1,0 +1,49 @@
+<!DOCTYPE html><html lang="en" class="initial dark"> <head><!-- Global Metadata --><meta charset="utf-8"><meta name="viewport" content="width=device-width"><meta name="generator" content="Astro v5.16.6"><link rel="alternate" type="application/rss+xml" title="RSS Feed for strudel.cc" href="/rss.xml"><link rel="icon" type="image/svg+xml" href="/favicon.ico"><meta name="description" content="Strudel is a music live coding environment for the browser, porting the TidalCycles pattern language to JavaScript."><link rel="icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/icons/apple-icon-180.png" sizes="180x180"><meta name="theme-color" content="#222222"><base href="/"><!-- Scrollable a11y code helper --><!-- <script src={`${baseNoTrailing}/make-scrollable-code-focusable.js`} is:inline></script> --><!-- <script src="/src/pwa.ts"></script> --><!-- this does not work for some reason: --><!-- <style is:global define:vars={strudelTheme}></style> --><!-- the following variables are just a fallback to make sure everything is readable without JS --><!-- {pwaInfo && <Fragment set:html={pwaInfo.webManifest.linkTag} />} --><script type="module" src="/_astro/HeadCommon.astro_astro_type_script_index_0_lang.e07PE1c9.js"></script><!-- Page Metadata --><link rel="canonical" href="https://joeys-workshop.vercel.app/articles/record/"><!-- OpenGraph Tags --><meta property="og:title" content="How to record your music in strudel? - Joey's Workshop"><meta property="og:type" content="article"><meta property="og:url" content="https://joeys-workshop.vercel.app/articles/record/"><meta property="og:locale" content="en"><meta property="og:image" content="https://joeys-workshop.vercel.app/favicon.png"><meta property="og:image:alt" content="Joey's Workshop Logo"><meta name="description" property="og:description" content="Learn live coding with Strudel through interactive examples."><meta property="og:site_name" content="Joey's Workshop"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="generator" content="Astro v5.16.6"><link rel="icon" type="image/png" href="/favicon.png"><title>How to record your music in strudel? - Joey&#39;s Workshop</title><meta name="description" content="Learn live coding with Strudel through interactive examples."><link rel="stylesheet" href="/_astro/chain.DI5MFFIi.css">
+<style>:root{--color-background: #222222;--color-lineHighlight: #000000;--color-primary: #9cdbfb;--color-secondary: #cae797;--color-foreground: #ffffff}html{scroll-behavior:smooth}body{background-color:var(--color-background);color:var(--color-foreground);font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,sans-serif}a{color:var(--color-primary);text-decoration:none}a:hover{text-decoration:underline}code{background-color:var(--color-lineHighlight);color:var(--color-primary);padding:.2em .4em;border-radius:.3em;font-family:Courier New,monospace;font-size:.9em}pre{background-color:var(--color-lineHighlight);border:1px solid var(--color-lineHighlight);border-radius:.5em;padding:1em;overflow-x:auto;margin:1em 0}pre code{background-color:transparent;color:var(--color-foreground);padding:0}h1,h2,h3,h4,h5,h6{color:var(--color-primary);margin-top:1.5em;margin-bottom:.5em}h1{font-size:2.5em;border-bottom:2px solid var(--color-secondary);padding-bottom:.3em}.site-header h1{border-bottom:none;padding-bottom:0}h2{font-size:2em}h3{font-size:1.5em}.prose-invert{--tw-prose-body: var(--color-foreground);--tw-prose-headings: var(--color-primary);--tw-prose-lead: var(--color-foreground);--tw-prose-links: var(--color-primary);--tw-prose-bold: var(--color-foreground);--tw-prose-counters: var(--color-primary);--tw-prose-bullets: var(--color-secondary);--tw-prose-hr: var(--color-lineHighlight);--tw-prose-quotes: var(--color-foreground);--tw-prose-quote-borders: var(--color-secondary);--tw-prose-captions: var(--color-foreground);--tw-prose-code: var(--color-primary);--tw-prose-pre-bg: var(--color-lineHighlight);--tw-prose-pre-code: var(--color-foreground);--tw-prose-th-borders: var(--color-lineHighlight);--tw-prose-td-borders: var(--color-lineHighlight)}@media(max-width:768px){h1{font-size:1.875em}h2{font-size:1.5em}main{padding:1.5rem}}code:before,code:after{content:""!important}.prose h1:before,.prose h2:before,.prose h3:before,.prose h4:before,.prose h5:before,.prose h6:before{display:block;content:" ";margin-top:-70px;height:70px;visibility:hidden;pointer-events:none}.icon.icon-link{visibility:hidden}.prose h1:hover .icon.icon-link,.prose h2:hover .icon.icon-link,.prose h3:hover .icon.icon-link,.prose h4:hover .icon.icon-link,.prose h5:hover .icon.icon-link,.prose h6:hover .icon.icon-link{visibility:visible}.prose h1>a,.prose h2>a,.prose h3>a,.prose h4>a,.prose h5>a,.prose h6>a{text-decoration:none!important}.icon.icon-link:after{content:"#";margin-left:8px;font-size:.9em;opacity:50%}:root{color-scheme:dark;--background: #222;--lineBackground: #22222299;--foreground: #fff;--caret: #ffcc00;--selection: rgba(128, 203, 196, .5);--selectionMatch: #036dd626;--lineHighlight: #00000050;--gutterBackground: transparent;--gutterForeground: #8a919966}
+</style></head> <body class="h-app-height m-0 text-gray-50 bg-background"> <header class="border-b border-lineHighlight"> <nav class="max-w-6xl mx-auto px-6 py-6 site-header"> <h1 class="text-2xl font-bold text-primary"> <a href="/"> <img src="/_astro/joeysworkshop.B4dePuJP_ZMgaBe.webp" alt="Joey's Workshop" loading="lazy" decoding="async" fetchpriority="auto" width="180" height="58" class="h-10"> </a> </h1> </nav> </header> <main class="max-w-6xl mx-auto px-6 py-12"> <article class="prose prose-invert max-w-none"> <h1>How to record your music in strudel?</h1> <p>(Yo, if you’re on Windows or Linux, this probably won’t help you much, cause I’ve only got a Mac 😭)</p>
+<p>So you’ve create something in Strudel and fancy sticking it on your socials. Bit of a bummer though, cause Strudel doesn’t actually have a built-in record or export audio feature at the moment. Anyway, here’s a few ways you can get it sorted.</p>
+<p><strong>I’ve just listed the software below that’ll do the job, but there’s no specific guide. I might do some video tutorials one day, but for now, you’ll have to do a bit of reserach :)</strong></p>
+<br/>
+<h1 id="sample---a-chrome-extension">Sample - a chrome extension<a aria-hidden="true" tabindex="-1" href="#sample---a-chrome-extension"><span class="icon icon-link"></span></a></h1>
+<p><a href="https://chromewebstore.google.com/detail/sample/kpkcennohgffjdgaelocingbmkjnpjgc">https://chromewebstore.google.com/detail/sample/kpkcennohgffjdgaelocingbmkjnpjgc</a></p>
+<ul>
+<li>
+<p><strong>Pros:</strong> free, easy to install</p>
+</li>
+<li>
+<p><strong>Cons:</strong> makes you stuck with Google Chrome, only simple audio editing</p>
+</li>
+</ul>
+<br/>
+<h1 id="obs-studio">OBS Studio<a aria-hidden="true" tabindex="-1" href="#obs-studio"><span class="icon icon-link"></span></a></h1>
+<p><a href="https://obsproject.com/">https://obsproject.com/</a></p>
+<ul>
+<li>
+<p><strong>Pros:</strong> free and sorts both your audio and screen recording in one go. Also can grab audio just from specific apps.</p>
+</li>
+<li>
+<p><strong>Cons:</strong> the interface can be a bit confusing if you’re new to it, and I’m pretty sure you can’t only record audio and get a audio file.</p>
+</li>
+</ul>
+<br/>
+<h1 id="blackhole--any-recording-software">BlackHole + Any recording software<a aria-hidden="true" tabindex="-1" href="#blackhole--any-recording-software"><span class="icon icon-link"></span></a></h1>
+<p><a href="https://existential.audio/blackhole/">https://existential.audio/blackhole/</a></p>
+<ul>
+<li>
+<p><strong>Pros:</strong> It’s freeeee!</p>
+</li>
+<li>
+<p><strong>Cons:</strong> Setting it up can be a bit of complex, and it records all your system sounds as well.</p>
+</li>
+</ul>
+<br/>
+<h1 id="loopback--any-recording-software">LOOPBACK + Any recording software<a aria-hidden="true" tabindex="-1" href="#loopback--any-recording-software"><span class="icon icon-link"></span></a></h1>
+<p><a href="https://rogueamoeba.com/loopback/">https://rogueamoeba.com/loopback/</a></p>
+<ul>
+<li>
+<p><strong>Pros:</strong> You can grab audio just from specific apps. The visual interface makes setting it up super easy.</p>
+</li>
+<li>
+<p><strong>Cons:</strong> It’s not free (and kinda expensive)!</p>
+</li>
+</ul> </article> </main> <footer class="border-t border-lineHighlight mt-12"> <div class="max-w-6xl mx-auto px-6 py-6 text-center text-gray-400 text-sm"> <p>© 2026 Joey's Workshop. </p> </div> </footer> </body></html>
